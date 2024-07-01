@@ -4,7 +4,6 @@ import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Select from '@/components/ui/Select'
 import Upload from '@/components/ui/Upload'
-import Checkbox from '@/components/ui/Checkbox'
 import Notification from '@/components/ui/Notification'
 import toast from '@/components/ui/toast'
 import {
@@ -73,12 +72,6 @@ const NewProjectForm = () => {
     const currentUserId = useAppSelector((state) => state.auth.user.id)
 
     const [categories, setCategories] = useState([])
-    const [checkboxList, setCheckboxList] = useState<(string | number)[]>([])
-
-    const onCheckboxChange = (options: (string | number)[], e: any) => {
-        console.log('Checkbox change', options, e)
-        setCheckboxList(options)
-    }
 
     const onSubmit = (
         formValue: FormModel,

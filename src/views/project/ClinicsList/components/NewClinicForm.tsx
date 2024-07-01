@@ -6,7 +6,14 @@ import Notification from '@/components/ui/Notification'
 import toast from '@/components/ui/toast'
 import Select from '@/components/ui/Select'
 import Upload from '@/components/ui/Upload'
-import { Field, Form, Formik, FieldProps } from 'formik'
+import {
+    Field,
+    FieldArray,
+    Form,
+    Formik,
+    FieldProps,
+    ErrorMessage,
+} from 'formik'
 import { FcImageFile } from 'react-icons/fc'
 import {
     useAppDispatch,
@@ -16,7 +23,7 @@ import {
     getSaloonsList,
 } from '../store'
 
-import { getCategoryList } from '../../CategoryList/store'
+import { getAllCategoryList } from '../../CategoryList/store'
 
 import * as Yup from 'yup'
 
@@ -27,6 +34,7 @@ type FormModel = {
     address: string
     images: string[]
     file: string
+    workingTime: []
 }
 
 type Category = {
@@ -69,7 +77,7 @@ const NewProjectForm = () => {
         setSubmitting(true)
 
         const formData = new FormData()
-        const { name, description, categories, address, file, images } =
+        const { name, description, categories, address, file, images, workingTime } =
             formValue
 
         let newCategories = categories.map((category) => category._id)
@@ -78,6 +86,7 @@ const NewProjectForm = () => {
         formData.append('about', description)
         formData.append('createdBy', currentUserId || '')
         formData.append('categories', JSON.stringify(newCategories))
+        formData.append('workingTime', JSON.stringify(workingTime))
         formData.append('location[type]', 'Point')
         formData.append("location[coordinates][]", "39.19057020516831");
         formData.append("location[coordinates][]", "21.53677989904675");
@@ -105,7 +114,7 @@ const NewProjectForm = () => {
     }
 
     useEffect(() => {
-        let responseData = dispatch(getCategoryList())
+        let responseData = dispatch(getAllCategoryList())
         responseData.then((data) => {
             const updatedCategories = data.payload.map((cat: Category) => {
                 return {
@@ -127,6 +136,15 @@ const NewProjectForm = () => {
                 address: '',
                 images: [],
                 file: '',
+                workingTime: [
+                    { day: 'السبت', open: '', close: '', selected: false },
+                    { day: 'الأحد', open: '', close: '', selected: false },
+                    { day: 'الاثنين', open: '', close: '', selected: false },
+                    { day: 'الثلاثاء', open: '', close: '', selected: false },
+                    { day: 'الأربعاء', open: '', close: '', selected: false },
+                    { day: 'الخميس', open: '', close: '', selected: false },
+                    { day: 'الجمعة', open: '', close: '', selected: false },
+                ],
             }}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -204,6 +222,53 @@ const NewProjectForm = () => {
                                     )
                                 }}
                             </Field>
+                        </FormItem>
+                        <FormItem label='أوقات العمل'>
+                        <FieldArray name="workingTime">
+                            {() => (
+                                <div>
+                                    {values.workingTime.map((time, index) => (
+                                        <div
+                                            key={time.day}
+                                            style={{ marginLeft: '10px' }}
+                                        >
+                                            <label>
+                                                <Field
+                                                    type="checkbox"
+                                                    name={`workingTime.${index}.selected`}
+                                                />
+                                                {time.day}
+                                            </label>
+                                            {values.workingTime[index]
+                                                .selected && (
+                                                <div>
+                                                    <Field
+                                                        type="time"
+                                                        name={`workingTime.${index}.open`}
+                                                        placeholder="Open Time"
+                                                    />
+                                                    <ErrorMessage
+                                                        name={`workingTime.${index}.open`}
+                                                        component="div"
+                                                        style={{ color: 'red' }}
+                                                    />
+                                                    <Field
+                                                        type="time"
+                                                        name={`workingTime.${index}.close`}
+                                                        placeholder="Close Time"
+                                                    />
+                                                    <ErrorMessage
+                                                        name={`workingTime.${index}.close`}
+                                                        component="div"
+                                                        style={{ color: 'red' }}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </FieldArray>
                         </FormItem>
                         <FormItem
                             label="شعار العيادة"
