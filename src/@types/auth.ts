@@ -40,7 +40,7 @@ export type SignUpCredential = {
     email: string
     password: string
     phone: string | undefined
-    fcmToken: string | undefined
+    fcmToken?: string | undefined
 }
 
 export type ForgotPassword = {

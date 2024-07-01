@@ -16,13 +16,14 @@ interface SignUpFormProps extends CommonProps {
 }
 
 type SignUpFormSchema = {
-    userName: string
+    name: string
     password: string
     email: string
+    phone: string
 }
 
 const validationSchema = Yup.object().shape({
-    userName: Yup.string().required('Please enter your user name'),
+    name: Yup.string().required('Please enter your user name'),
     email: Yup.string()
         .email('Invalid email')
         .required('Please enter your email'),
@@ -31,6 +32,7 @@ const validationSchema = Yup.object().shape({
         [Yup.ref('password')],
         'Your passwords do not match'
     ),
+    phone: Yup.string().required('Please enter your phone number'),
 })
 
 const SignUpForm = (props: SignUpFormProps) => {
@@ -44,9 +46,9 @@ const SignUpForm = (props: SignUpFormProps) => {
         values: SignUpFormSchema,
         setSubmitting: (isSubmitting: boolean) => void
     ) => {
-        const { userName, password, email } = values
+        const { name, password, email, phone } = values
         setSubmitting(true)
-        const result = await signUp({ userName, password, email })
+        const result = await signUp({ name, password, email, phone })
 
         if (result?.status === 'failed') {
             setMessage(result.message)
@@ -64,10 +66,11 @@ const SignUpForm = (props: SignUpFormProps) => {
             )}
             <Formik
                 initialValues={{
-                    userName: 'admin1',
-                    password: '123Qwe1',
-                    confirmPassword: '123Qwe1',
+                    name: 'admin1',
+                    password: '123Qwed1',
+                    confirmPassword: '123Qwed1',
                     email: 'test@testmail.com',
+                    phone: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
@@ -83,13 +86,13 @@ const SignUpForm = (props: SignUpFormProps) => {
                         <FormContainer>
                             <FormItem
                                 label="اسم المستخدم"
-                                invalid={errors.userName && touched.userName}
-                                errorMessage={errors.userName}
+                                invalid={errors.name && touched.name}
+                                errorMessage={errors.name}
                             >
                                 <Field
                                     type="text"
                                     autoComplete="off"
-                                    name="userName"
+                                    name="name"
                                     placeholder="اسم المستخدم"
                                     component={Input}
                                 />
@@ -132,6 +135,19 @@ const SignUpForm = (props: SignUpFormProps) => {
                                     name="confirmPassword"
                                     placeholder="تأكيد كلمةالمرور"
                                     component={PasswordInput}
+                                />
+                            </FormItem>
+                            <FormItem
+                                label="رقم الجوال"
+                                invalid={errors.phone && touched.phone}
+                                errorMessage={errors.name}
+                            >
+                                <Field
+                                    type="text"
+                                    autoComplete="off"
+                                    name="phone"
+                                    placeholder="ادخل رقم الجوال"
+                                    component={Input}
                                 />
                             </FormItem>
                             <Button
