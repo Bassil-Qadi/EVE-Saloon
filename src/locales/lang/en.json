@@ -19,6 +19,11 @@
             "customerDetails": "User Details",
             "mail": "Mail"
         },
+        "appsBook": {
+            "book": "Bookings",
+            "bookings": "Bookings List"
+
+        },
         "appsSales": {
             "sales": "Statistics",
             "dashboard": "Dashboard",

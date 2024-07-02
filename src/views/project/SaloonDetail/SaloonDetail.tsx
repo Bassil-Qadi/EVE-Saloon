@@ -30,6 +30,7 @@ import { injectReducer } from '@/store'
 import isEmpty from 'lodash/isEmpty'
 import useQuery from '@/utils/hooks/useQuery'
 import { deleteCategory, getCategoryList, getSaloonServices } from '../CategoryList/store'
+import UserTable from "@/views/bookings/Customers/components/UsersTable"
 
 injectReducer('projectSaloonDetails', reducer)
 
@@ -150,6 +151,7 @@ const SaloonDetail = () => {
                                 {saloonCategories && <CategoriesTable
                                     data={saloonCategories}
                                     userId={query.get('id')}
+    
                                 />}
                                 {saloonServices && <ServicesTable
                                     data={saloonServices}
@@ -171,8 +173,8 @@ const SaloonDetail = () => {
                     <h3 className="mt-8">No user found!</h3>
                 </div>
             )}
-            <NewProjectDialog saloonId={data?._id} />
-            <NewServiceDialog saloonCategories={saloonCategories} />
+            <NewProjectDialog saloonId={data?._id} fetchData={fetchData} />
+            <NewServiceDialog saloonCategories={saloonCategories} fetchData={fetchData} />
             <ConfirmDialog
                 isOpen={dialogOpen}
                 type="danger"

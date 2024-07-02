@@ -7,32 +7,32 @@ import toast from '@/components/ui/toast'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import {
     FaFacebookF,
-    FaSnapchat,
-    FaTiktok,
-    FaInstagram
+    FaTwitter,
+    FaLinkedinIn,
+    FaPinterestP,
 } from 'react-icons/fa'
 import { HiPencilAlt, HiOutlineTrash } from 'react-icons/hi'
 import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
 import {
-    openEditSaloonDetailDialog,
+    // deleteCustomer,
+    openEditCustomerDetailDialog,
     useAppDispatch,
-    Saloon
+    User,
 } from '../store'
-import { deleteSaloon, changeSaloonStatus } from '../../ProjectList/store'
-import EditSaloonProfile from './EditSaloonProfile'
+import EditCustomerProfile from './EditCustomerProfile'
 
-type SaloonInfoFieldProps = {
+type CustomerInfoFieldProps = {
     title?: string
     value?: string
     color?: string
 }
 
 type CustomerProfileProps = {
-    data?: Partial<Saloon>
+    data?: Partial<User>
 }
 
-const SaloonInfoField = ({ title, value, color }: SaloonInfoFieldProps) => {
+const CustomerInfoField = ({ title, value, color }: CustomerInfoFieldProps) => {
     return (
         <div>
             <span>{title}</span>
@@ -49,7 +49,7 @@ const SaloonInfoField = ({ title, value, color }: SaloonInfoFieldProps) => {
     )
 }
 
-const SaloonProfileAction = ({ id, status = '', onchangeStatus }: { id?: string, status: string, onchangeStatus: any }) => {
+const CustomerProfileAction = ({ id }: { id?: string }) => {
     const dispatch = useAppDispatch()
     const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -66,43 +66,22 @@ const SaloonProfileAction = ({ id, status = '', onchangeStatus }: { id?: string,
     const onDelete = () => {
         setDialogOpen(false)
         if (id) {
-            dispatch(deleteSaloon(id))
+            // dispatch(deleteCustomer({ id }))
         }
-        navigate('/app/project/project-list')
+        navigate('/app/crm/customers')
         toast.push(
             <Notification title={'Successfully Deleted'} type="success">
-                تم حذف الصالون بنجاح
+                تم حذف المستخدم بنجاح
             </Notification>,
         )
     }
 
     const onEdit = () => {
-        dispatch(openEditSaloonDetailDialog())
-    }
-
-    const onChangeSaloonStatus = () => {
-        let response = dispatch(changeSaloonStatus({
-            saloonId: id,
-            isActive: !status
-        }))
-
-        response.then(data => {
-            if(data.payload?.statusCode === 200) {
-                onchangeStatus(!status)
-                toast.push(
-                    <Notification title={'Successfully Modified'} type="success">
-                        تم تغيير الحالة بنجاح
-                    </Notification>,
-                )
-            }
-        })
+        dispatch(openEditCustomerDetailDialog())
     }
 
     return (
         <>
-            {/* <Button block onClick={onChangeSaloonStatus}>
-                <span className={`${ status ? 'text-red-600' : 'text-green-600' }`}>{ status ? 'إلغاء التفعيل' : 'تفعيل' }</span>
-            </Button> */}
             <Button block icon={<HiOutlineTrash />} onClick={onDialogOpen}>
                 حذف
             </Button>
@@ -117,7 +96,7 @@ const SaloonProfileAction = ({ id, status = '', onchangeStatus }: { id?: string,
             <ConfirmDialog
                 isOpen={dialogOpen}
                 type="danger"
-                title="حذف الحساب"
+                title="حذف المستخدم"
                 confirmButtonColor="red-600"
                 onClose={onDialogClose}
                 onRequestClose={onDialogClose}
@@ -125,49 +104,43 @@ const SaloonProfileAction = ({ id, status = '', onchangeStatus }: { id?: string,
                 onConfirm={onDelete}
             >
                 <p>
-                    هل أنت متأكد أنك تريد حذف هذا الحساب كل سجل المتعلقة بهذا
-                    الحساب سيتم حذفها أيضًا. هذا لا يمكن التراجع عن الإجراء.
+                    هل أنت متأكد أنك تريد حذف هذا المستخدم كل سجل المتعلقة بهذا
+                    المستخدم سيتم حذفها أيضًا. هذا لا يمكن التراجع عن الإجراء.
                 </p>
             </ConfirmDialog>
-            <EditSaloonProfile />
+            <EditCustomerProfile />
         </>
     )
 }
 
-const SaloonProfile = ({ data = {} }: CustomerProfileProps) => {
-
-    const [profileStatus, setProfileStatus] = useState(data?.isActive)
-
-    const onSocialLinkClick = (link: string) => window.open(link, '_newtab')
-
+const CustomerProfile = ({ data = {} }: CustomerProfileProps) => {
     return (
         <Card>
             <div className="flex flex-col xl:justify-between h-full 2xl:min-w-[360px] mx-auto">
                 <div className="flex xl:flex-col items-center gap-4">
-                    <Avatar src={data?.logo} size={90} shape="circle" />
+                    <Avatar size={90} shape="circle">
+                        {data?.name?.charAt(0).toUpperCase()}
+                    </Avatar>
                     <h4 className="font-bold">{data.name?.toUpperCase()}</h4>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-7 gap-x-4 mt-8">
-                    <SaloonInfoField title="الاسم" value={data.name} />
-                    {data?.createdBy?.name && <SaloonInfoField title="المالك" value={data?.createdBy?.name} />}
-                    <SaloonInfoField
-                        title="التصنيف"
-                        value={data?. type === 'saloon' ? 'صالون' : 'عيادة'}
+                    <CustomerInfoField title="البريد الإلكتروني" value={data.email} />
+                    <CustomerInfoField title="رقم الجوال" value={data?.phone} />
+                    <CustomerInfoField
+                        title="حالة الحساب"
+                        value={data?.isVerified ? 'موثق' : 'غير موثق'}
+                        color={data?.isVerified ? 'green' : 'red'}
                     />
-                    <SaloonInfoField
+                    <CustomerInfoField
                         title="تاريخ الإنشاء"
                         value={dayjs(data?.createdAt).format('DD/MM/YYYY')}
                     />
-                    <SaloonInfoField
-                        title="رقم الجوال"
-                        value={data?.phone}
+                    <CustomerInfoField
+                        title="الدور"
+                        value={data?.role === 'user' ? 'مستخدم' : 'مسؤول'}
                     />
-                    <SaloonInfoField
-                        title="العنوان"
-                        value={data?.address}
-                    />
-                    <div className="mb-7">
-                        <span>وسائل التواصل الاجتماعي</span>
+                    {/* <div className="mb-7">
+                        <span>Social</span>
                         <div className="flex mt-4">
                             <Button
                                 className="mr-2"
@@ -176,42 +149,38 @@ const SaloonProfile = ({ data = {} }: CustomerProfileProps) => {
                                 icon={
                                     <FaFacebookF className="text-[#1773ea]" />
                                 }
-                                onClick={() => onSocialLinkClick(data.facebook)}
                             />
                             <Button
                                 className="mr-2"
                                 shape="circle"
                                 size="sm"
-                                icon={<FaSnapchat className="text-[#fde047]" />}
-                                onClick={() => onSocialLinkClick(data.snapchat)}
-                            />
-                            <Button
-                                className="mr-2"
-                                shape="circle"
-                                size="sm"
-                                icon={
-                                    <FaTiktok className="text-[#c026d3]" />
-                                }
-                                onClick={() => onSocialLinkClick(data.tiktok)}
+                                icon={<FaTwitter className="text-[#1da1f3]" />}
                             />
                             <Button
                                 className="mr-2"
                                 shape="circle"
                                 size="sm"
                                 icon={
-                                    <FaInstagram className="text-[#ec4899]" />
+                                    <FaLinkedinIn className="text-[#0077b5]" />
                                 }
-                                onClick={() => onSocialLinkClick(data.instagram)}
+                            />
+                            <Button
+                                className="mr-2"
+                                shape="circle"
+                                size="sm"
+                                icon={
+                                    <FaPinterestP className="text-[#df0018]" />
+                                }
                             />
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="mt-4 flex flex-col xl:flex-row gap-2">
-                    <SaloonProfileAction id={data._id} status={profileStatus} onchangeStatus={setProfileStatus} />
+                    <CustomerProfileAction id={data.id} />
                 </div>
             </div>
         </Card>
     )
 }
 
-export default SaloonProfile
+export default CustomerProfile

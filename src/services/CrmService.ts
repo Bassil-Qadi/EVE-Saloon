@@ -24,13 +24,44 @@ export async function apiGetCrmCustomers<T, U extends Record<string, unknown>>(
     })
 }
 
-export async function apiGetCrmUsers<T, U extends Record<string, unknown>>(
+export async function apiGetCrmUsers<T>(
     data: any
 ) {
     return ApiService.fetchData<T>({
         url: '/saloonStaff',
         method: 'post',
         data
+    })
+}
+
+export async function apiGetBookings<T>(
+    data: any
+) {
+    return ApiService.fetchData<T>({
+        url: '/saloon/booking',
+        method: 'post',
+        data
+    })
+}
+
+export async function apiGetBookingById<T>(
+    data: any
+) {
+    return ApiService.fetchData<T>({
+        url: `/saloon/booking/${data}`,
+        method: 'get',
+    })
+}
+
+export async function apPutBooking<T, U extends Record<string, unknown>>(
+    data: any
+) {
+    let bookingId = data.bookingId
+    data['bookingId'] = undefined
+    return ApiService.fetchData<T>({
+        url: `/booking/${bookingId}`,
+        method: 'put',
+        data,
     })
 }
 
@@ -95,6 +126,18 @@ export async function apiDeleteCrmUser<
     return ApiService.fetchData<T>({
         url: `/saloonStaff/${data.deletedUserId}`,
         method: 'delete',
+    })
+}
+
+export async function apiDeleteBooking<
+    T
+>(data: any) {
+    let bookingId = data.deleteBookingId
+    data['deleteBookingId'] = undefined
+    return ApiService.fetchData<T>({
+        url: `/booking/cancel/${bookingId}`,
+        method: 'post',
+        data
     })
 }
 

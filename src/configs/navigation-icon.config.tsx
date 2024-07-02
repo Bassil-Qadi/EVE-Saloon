@@ -25,7 +25,8 @@ import {
     HiOutlineCode,
     HiOutlinePhotograph,
     HiDocumentDuplicate,
-    HiOutlineScissors  
+    HiOutlineScissors,
+    HiOutlineCalendar  
 } from 'react-icons/hi'
 import StoreOutlinedIcon from '@mui/icons-material/StoreOutlined';
 
@@ -37,6 +38,7 @@ const navigationIcon: NavigationIcons = {
     apps: <HiOutlineViewGridAdd />,
     project: <HiOutlineScissors />,
     crm: <HiOutlineUserGroup />,
+    bookings: <HiOutlineCalendar  />,
     sales: <HiOutlineTrendingUp />,
     crypto: <HiOutlineCurrencyDollar />,
     knowledgeBase: <LiveHelpOutlined />,

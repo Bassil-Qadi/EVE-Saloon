@@ -67,11 +67,20 @@ const appsRoute: Routes = [
     },
     {
         key: 'appsCrm.customers',
-        path: `${APP_PREFIX_PATH}/crm/customers`,
+        path: `${APP_PREFIX_PATH}/staff`,
         component: lazy(() => import('@/views/crm/Customers')),
         authority: [ADMIN, USER],
         meta: {
             header: 'طاقم العمل',
+        },
+    },
+    {
+        key: 'appsBookings.bookings',
+        path: `${APP_PREFIX_PATH}/bookings`,
+        component: lazy(() => import('@/views/bookings/Customers')),
+        authority: [ADMIN, USER],
+        meta: {
+            header: 'قائمة الحجوزات',
         },
     },
     {

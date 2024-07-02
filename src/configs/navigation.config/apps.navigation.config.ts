@@ -100,6 +100,27 @@ const appsNavigationConfig: NavigationTree[] = [
                 ],
             },
             {
+                key: 'appsBook',
+                path: ``,
+                title: 'Bookings',
+                translateKey: 'nav.appsBook.book',
+                icon: 'bookings',
+                type: NAV_ITEM_TYPE_COLLAPSE,
+                authority: [ADMIN, USER],
+                subMenu: [
+                    {
+                        key: 'appsBook.bookings',
+                        path: `${APP_PREFIX_PATH}/bookings`,
+                        title: 'Bookings List',
+                        translateKey: 'nav.appsBook.bookings',
+                        icon: '',
+                        type: NAV_ITEM_TYPE_ITEM,
+                        authority: [ADMIN, USER],
+                        subMenu: [],
+                    },
+                ],
+            },
+            {
                 key: 'apps.crm',
                 path: '',
                 title: 'Users',
@@ -130,7 +151,7 @@ const appsNavigationConfig: NavigationTree[] = [
                     // },
                     {
                         key: 'appsCrm.customers',
-                        path: `${APP_PREFIX_PATH}/crm/customers`,
+                        path: `${APP_PREFIX_PATH}/staff`,
                         title: 'Users List',
                         translateKey: 'nav.appsCrm.customers',
                         icon: '',

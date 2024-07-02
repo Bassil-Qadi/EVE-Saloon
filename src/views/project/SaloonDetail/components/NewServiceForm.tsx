@@ -21,7 +21,7 @@ type FormModel = {
     saloonCategory: string
 }
 
-const NewServiceForm = ({ saloonCategories }: any) => {
+const NewServiceForm = ({ saloonCategories, fetchData }: any) => {
     const dispatch = useAppDispatch()
 
     const [saloonsList, setSaloonsList] = useState([])
@@ -73,7 +73,12 @@ const NewServiceForm = ({ saloonCategories }: any) => {
 
         const { name, price, duration, saloon, saloonCategory } = formValue
 
-        dispatch(addService({ name, price, duration, saloonCategoryId: saloonCategory, userId: currentUserId, saloonId: saloon._id }))
+        let response = dispatch(addService({ name, price, duration, saloonCategoryId: saloonCategory, userId: currentUserId, saloonId: saloon._id, staffId: '668154b40a32425c0557835e', maxService: 2 }))
+        response.then(data => {
+            if(data.payload.responseType === 'Success') {
+                fetchData()
+            }
+        })
         dispatch(toggleNewServiceDialog(false))
         // dispatch(getCategoryList({ saloonId: saloon._id }))
     }

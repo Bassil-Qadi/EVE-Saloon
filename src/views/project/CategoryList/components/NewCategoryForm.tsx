@@ -23,7 +23,7 @@ const validationSchema = Yup.object().shape({
     // description: Yup.string().required('الرجاء إدخال التفاصيل')
 })
 
-const NewCategoryForm = ({ saloonId }: any) => {
+const NewCategoryForm = ({ saloonId, fetchData }: any) => {
     const dispatch = useAppDispatch()
 
     // const [saloonsList, setSaloonsList] = useState([])
@@ -55,9 +55,14 @@ const NewCategoryForm = ({ saloonId }: any) => {
 
         const { name } = formValue
 
-        dispatch(addCategory({ name, createdBy: currentUserId, saloonId }))
-        dispatch(toggleNewCategoryDialog(false))
-        // dispatch(getCategoryList({ saloonId: saloon._id }))
+        let response = dispatch(addCategory({ name, createdBy: currentUserId, saloonId }))
+        response.then(data => {
+            if(data.payload.responseType === 'Success') {
+                dispatch(toggleNewCategoryDialog(false))
+                fetchData()
+            }
+        })
+       
     }
 
     return (

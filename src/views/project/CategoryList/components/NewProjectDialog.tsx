@@ -8,7 +8,7 @@ import {
 
 import { useAppSelector as useSaloonDetailsSelector, toggleNewCategoryDialog } from '../../SaloonDetail/store'
 
-const NewProjectDialog = ({ saloonId }: any) => {
+const NewProjectDialog = ({ saloonId, fetchData }: any) => {
     const dispatch = useAppDispatch()
 
     const newProjectDialog = useSaloonDetailsSelector(
@@ -27,7 +27,7 @@ const NewProjectDialog = ({ saloonId }: any) => {
         >
             <h4>إضافة صنف جديد</h4>
             <div className="mt-4">
-                <NewCategoryForm saloonId={saloonId} />
+                <NewCategoryForm saloonId={saloonId} fetchData={fetchData} />
             </div>
         </Dialog>
     )
