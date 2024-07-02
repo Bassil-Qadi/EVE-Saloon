@@ -108,12 +108,16 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
                                     }
 
                                 >
-                                    <Avatar
+                                    {/* <Avatar
                                         className="border-2 border-white dark:border-gray-800 shadow-lg"
                                         size={100}
                                         shape="circle"
                                         icon={<HiOutlineUser />}
                                         {...avatarProps}
+                                    /> */}
+                                    <img 
+                                        {...avatarProps} 
+                                        className="border-2 border-white dark:border-gray-800 shadow-lg"
                                     />
                                 </Upload>
                             </div>
