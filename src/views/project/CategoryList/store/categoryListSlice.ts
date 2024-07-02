@@ -193,6 +193,15 @@ const categoryListSlice = createSlice({
             .addCase(putCategory.fulfilled, (state) => {
                 state.loading = false
             })
+            .addCase(deleteCategory.fulfilled, (state) => {
+                state.loading = false
+            })
+            .addCase(deleteCategory.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(deleteCategory.rejected, (state) => {
+                state.loading = false
+            })
             // .addCase(putProject.fulfilled, (state, action) => {
             //     state.projectList = action.payload
             // })

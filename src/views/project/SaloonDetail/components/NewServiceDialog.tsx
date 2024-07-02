@@ -8,7 +8,7 @@ import {
 } from '../store'
 
 
-const NewServiceDialog = ({ saloonCategories, fetchData }: any) => {
+const NewServiceDialog = ({ saloonCategories, saloonStaff, fetchData }: any) => {
     const dispatch = useAppDispatch()
 
     const newServiceDialog = useAppSelector(
@@ -27,7 +27,7 @@ const NewServiceDialog = ({ saloonCategories, fetchData }: any) => {
         >
             <h4>إضافة خدمة جديدة</h4>
             <div className="mt-4">
-                <NewServiceForm saloonCategories={saloonCategories} fetchData={fetchData} />
+                <NewServiceForm saloonCategories={saloonCategories} saloonStaff={saloonStaff} fetchData={fetchData} />
             </div>
         </Dialog>
     )

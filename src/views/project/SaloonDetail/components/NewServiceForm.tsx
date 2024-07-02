@@ -18,20 +18,24 @@ type FormModel = {
     price: string
     duration: string
     saloon: string
-    saloonCategory: string
+    maxService: string
+    saloonCategory: string 
+    saloonStaff: string 
 }
 
-const NewServiceForm = ({ saloonCategories, fetchData }: any) => {
+const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
     const dispatch = useAppDispatch()
 
     const [saloonsList, setSaloonsList] = useState([])
     const [saloonCategoriesList, setSaloonCategoriresList] = useState([])
+    const [saloonStaffList, setSaloonStaffList] = useState([])
     const currentUserId = useAppSelector((state) => state.auth.user.id)
 
     const validationSchema = Yup.object().shape({
         name: Yup.string().required('الرجاء إدحال الاسم'),
         price: Yup.string().required('الرجاء إدحال السعر'),
         duration: Yup.string().required('الرجاء إدحال المدة'),
+        maxService: Yup.string().required('الرجاء اختيار الحد الأعلى للخدمة'),
         saloonCategory: Yup.string().required('الرجاء اختيار الصنف').oneOf(saloonCategoriesList.map((option: any) => option.value), 'Invalid option selected'),
     })
 
@@ -62,7 +66,15 @@ const NewServiceForm = ({ saloonCategories, fetchData }: any) => {
                 value: cat._id
             }
         })
+        let newSaloonStaff = saloonStaff.map((staff: any) => {
+            return {
+                ...staff,
+                label: staff.name,
+                value: staff._id
+            }
+        })
         setSaloonCategoriresList(newSaloonCategories)
+        setSaloonStaffList(newSaloonStaff)
     }
 
     const onSubmit = (
@@ -71,9 +83,9 @@ const NewServiceForm = ({ saloonCategories, fetchData }: any) => {
     ) => {
         setSubmitting(true)
 
-        const { name, price, duration, saloon, saloonCategory } = formValue
+        const { name, price, duration, saloon, saloonCategory, saloonStaff, maxService } = formValue
 
-        let response = dispatch(addService({ name, price, duration, saloonCategoryId: saloonCategory, userId: currentUserId, saloonId: saloon._id, staffId: '668154b40a32425c0557835e', maxService: 2 }))
+        let response = dispatch(addService({ name, price, duration, saloonCategoryId: saloonCategory, userId: currentUserId, saloonId: saloon._id, staffId: saloonStaff, maxService }))
         response.then(data => {
             if(data.payload.responseType === 'Success') {
                 fetchData()
@@ -91,6 +103,8 @@ const NewServiceForm = ({ saloonCategories, fetchData }: any) => {
                 duration: '',
                 saloon: '',
                 saloonCategory: '',
+                maxService: '',
+                saloonStaff: '',
             }}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -140,6 +154,19 @@ const NewServiceForm = ({ saloonCategories, fetchData }: any) => {
                             />
                         </FormItem>
                         <FormItem
+                            label="الحد الأعلى للخدمة"
+                            invalid={errors.maxService && touched.maxService}
+                            errorMessage={errors.maxService}
+                        >
+                            <Field
+                                type="text"
+                                autoComplete="off"
+                                name="maxService"
+                                placeholder="ادخل الحد الأعلى للخدمة"
+                                component={Input}
+                            />
+                        </FormItem>
+                        <FormItem
                             label="قائمة الصالونات"
                             invalid={errors.saloon && touched.saloon}
                             errorMessage={errors.saloon}
@@ -175,6 +202,30 @@ const NewServiceForm = ({ saloonCategories, fetchData }: any) => {
                                             onChange={(options: any) =>
                                                 {
                                                     console.log(options)
+                                                    form.setFieldValue(
+                                                        field.name,
+                                                        options._id,
+                                                    )
+                                                }
+                                            }
+                                        />
+                                    )
+                                }}
+                            </Field>
+                        </FormItem>
+                        <FormItem
+                            label="قائمة العاملين"
+                            invalid={errors.saloonStaff && touched.saloonStaff}
+                            errorMessage={errors.saloonStaff}
+                        >
+                            <Field name="saloonStaff">
+                                {({ field, form }: FieldProps) => {
+                                    return (
+                                        <Select
+                                            placeholder="اختر العامل المراد إضافة الخدمة له"
+                                            options={saloonStaffList}
+                                            onChange={(options: any) =>
+                                                {
                                                     form.setFieldValue(
                                                         field.name,
                                                         options._id,

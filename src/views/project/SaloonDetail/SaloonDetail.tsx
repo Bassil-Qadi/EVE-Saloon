@@ -20,7 +20,7 @@ import reducer, {
     toggleDeleteCategoryDialog,
     toggleDeleteServiceDialog,
     getSaloon,
-    deleteService
+    deleteService,
 } from './store'
 import { useAppSelector as saloonAppSelector } from '@/views/project/ProjectList/store'
 import NewProjectDialog from '../CategoryList/components/NewProjectDialog'
@@ -29,8 +29,12 @@ import NewServiceDialog from './components/NewServiceDialog'
 import { injectReducer } from '@/store'
 import isEmpty from 'lodash/isEmpty'
 import useQuery from '@/utils/hooks/useQuery'
-import { deleteCategory, getCategoryList, getSaloonServices } from '../CategoryList/store'
-import UserTable from "@/views/bookings/Customers/components/UsersTable"
+import {
+    deleteCategory,
+    getCategoryList,
+    getSaloonServices,
+} from '../CategoryList/store'
+import UserTable from '@/views/bookings/Customers/components/UsersTable'
 
 injectReducer('projectSaloonDetails', reducer)
 
@@ -40,18 +44,17 @@ const SaloonDetail = () => {
 
     const query = useQuery()
 
-
-    const currentUserId = useAppSelector(
-        state => state.auth.user.id
-    )
     const dialogOpen = useAppSelector(
-        state => state.projectSaloonDetails.data.deleteCategoryDialog
+        (state) => state.projectSaloonDetails.data.deleteCategoryDialog,
     )
     const serviceDialogOpen = useAppSelector(
-        state => state.projectSaloonDetails.data.deleteServiceDialog
+        (state) => state.projectSaloonDetails.data.deleteServiceDialog,
     )
     const data = useAppSelector(
         (state) => state.projectSaloonDetails.data.profileData.saloon,
+    )
+    const saloonStaff = useAppSelector(
+        state => state.projectSaloonDetails.data.profileData.saloonStaff
     )
     const saloonCategories = useAppSelector(
         (state) => state.projectSaloonDetails.data.profileData.saloonCategories,
@@ -70,12 +73,15 @@ const SaloonDetail = () => {
         fetchData()
         fetchSaloonServices()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [query])
 
     const fetchSaloonServices = () => {
         if (data?._id) {
             let response = dispatch(getSaloonServices({ saloonId: data._id }))
             response.then((data) => {
+
+                if(data.error) setSaloonServices([])
+
                 if (data.payload) {
                     setSaloonServices(data.payload)
                 }
@@ -84,9 +90,9 @@ const SaloonDetail = () => {
     }
 
     const fetchData = () => {
-        let response = dispatch(getSaloon(currentUserId))
-        response.then(data => {
-            if(data.payload) {
+        let response = dispatch(getSaloon(query.get('id')))
+        response.then((data) => {
+            if (data.payload) {
                 dispatch(setSelectedSaloon(data.payload.data))
             }
         })
@@ -103,30 +109,60 @@ const SaloonDetail = () => {
     const onDeleteCategory = () => {
         let response = dispatch(deleteCategory(selectedCategory))
 
-        response.then(data => {
-            if(data.payload.responseType === 'Success') {
-                dispatch(toggleDeleteCategoryDialog(false))
-        toast.push(
-            <Notification title={'Successfully Modified'} type="success">
-                تم حذف الصنف  بنجاح
-            </Notification>,
-        )
+        response.then((data) => {
+            if(data.error) {
+                toast.push(
+                    <Notification
+                        title={'Something went wrong'}
+                        type="danger"
+                    >
+                        الرجاء المحاولة مرة أخرى
+                    </Notification>,
+                )
             }
+           
+            if (data.payload.responseType === 'Success') {
+                toast.push(
+                    <Notification
+                        title={'Successfully Modified'}
+                        type="success"
+                    >
+                        تم حذف الصنف بنجاح
+                    </Notification>,
+                )
+            } 
         })
-       
+        dispatch(toggleDeleteCategoryDialog(false))
     }
 
     const onDeleteService = () => {
         let response = dispatch(deleteService(selectedService))
-        
-        response.then(data => {
-            if(data.payload.responseType === 'Success') {
+
+        response.then((data) => {
+
+            if(data.error) {
+                toast.push(
+                    <Notification
+                        title={'Something went wrong'}
+                        type="danger"
+                    >
+                        الرجاء المحاولة مرة أخرى
+                    </Notification>,
+                )
+            }
+
+            if (data.payload.responseType === 'Success') {
                 dispatch(toggleDeleteServiceDialog(false))
-        toast.push(
-            <Notification title={'Successfully Modified'} type="success">
-                تم حذف الخدمة الحالة بنجاح
-            </Notification>,
-        )
+                fetchSaloonServices()
+                // fetchData()
+                toast.push(
+                    <Notification
+                        title={'Successfully Deleted'}
+                        type="success"
+                    >
+                        تم حذف الخدمة الحالة بنجاح
+                    </Notification>,
+                )
             }
         })
     }
@@ -148,15 +184,18 @@ const SaloonDetail = () => {
                                         userId={query.get('id')}
                                     />
                                 )}
-                                {saloonCategories && <CategoriesTable
-                                    data={saloonCategories}
-                                    userId={query.get('id')}
-    
-                                />}
-                                {saloonServices && <ServicesTable
-                                    data={saloonServices}
-                                    userId={query.get('id')}
-                                />}
+                                {saloonCategories && (
+                                    <CategoriesTable
+                                        data={saloonCategories}
+                                        userId={query.get('id')}
+                                    />
+                                )}
+                                {saloonServices && (
+                                    <ServicesTable
+                                        data={saloonServices}
+                                        userId={query.get('id')}
+                                    />
+                                )}
                                 {/* <PaymentMethods /> */}
                             </AdaptableCard>
                         </div>
@@ -174,7 +213,11 @@ const SaloonDetail = () => {
                 </div>
             )}
             <NewProjectDialog saloonId={data?._id} fetchData={fetchData} />
-            <NewServiceDialog saloonCategories={saloonCategories} fetchData={fetchData} />
+            <NewServiceDialog
+                saloonStaff={saloonStaff}
+                saloonCategories={saloonCategories}
+                fetchData={fetchSaloonServices}
+            />
             <ConfirmDialog
                 isOpen={dialogOpen}
                 type="danger"

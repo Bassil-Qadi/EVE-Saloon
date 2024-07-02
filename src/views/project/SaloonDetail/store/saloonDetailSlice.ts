@@ -257,6 +257,15 @@ const saloonDetailSlice = createSlice({
                 state.paymentHistoryData = action.payload?.orderHistory || []
                 state.paymentMethodData = action.payload?.paymentMethod || []
             })
+            .addCase(getSaloon.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(getSaloon.fulfilled, (state) => {
+                state.loading = false
+            })
+            .addCase(getSaloon.rejected, (state) => {
+                state.loading = false
+            })
             // .addCase(getCustomer.pending, (state) => {
             //     state.loading = true
             // })
