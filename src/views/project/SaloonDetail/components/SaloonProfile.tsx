@@ -144,7 +144,8 @@ const SaloonProfile = ({ data = {} }: CustomerProfileProps) => {
         <Card>
             <div className="flex flex-col xl:justify-between h-full 2xl:min-w-[360px] mx-auto">
                 <div className="flex xl:flex-col items-center gap-4">
-                    <Avatar src={data?.logo} size={90} shape="circle" />
+                    {/* <Avatar src={data?.logo} size={90} shape="circle" /> */}
+                    <img src={data?.logo} alt={data?.name} width={190} height={190} />
                     <h4 className="font-bold">{data.name?.toUpperCase()}</h4>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-7 gap-x-4 mt-8">
