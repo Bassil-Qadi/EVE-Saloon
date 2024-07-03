@@ -33,6 +33,7 @@ const validationSchema = Yup.object().shape({
         [Yup.ref('password')],
         'Your passwords do not match',
     ),
+    phone: Yup.string().required('Please enter your phone number'),
 })
 
 const SignUpForm = (props: SignUpFormProps) => {
@@ -57,7 +58,6 @@ const SignUpForm = (props: SignUpFormProps) => {
         })
             .then((currentToken) => {
                 if (currentToken) {
-                    console.log(currentToken)
                     fcmToken = currentToken
                 } else {
                     console.log(
@@ -87,11 +87,11 @@ const SignUpForm = (props: SignUpFormProps) => {
             )}
             <Formik
                 initialValues={{
-                    name: 'admin1',
-                    password: '123Qwe1',
-                    confirmPassword: '123Qwe1',
-                    email: 'test@testmail.com',
-                    phone: '0555551434'
+                    name: '',
+                    password: '',
+                    confirmPassword: '',
+                    email: '',
+                    phone: ''
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {

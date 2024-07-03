@@ -82,6 +82,7 @@ function useAuth() {
                                 userName: 'Anonymous',
                                 authority: ['USER'],
                                 email: '',
+                                phone: ''
                             }
                         )
                     )
