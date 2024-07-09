@@ -30,6 +30,7 @@ type SaloonInfoFieldProps = {
 
 type CustomerProfileProps = {
     data?: Partial<Saloon>
+    fetchData: () => void
 }
 
 const SaloonInfoField = ({ title, value, color }: SaloonInfoFieldProps) => {
@@ -49,7 +50,7 @@ const SaloonInfoField = ({ title, value, color }: SaloonInfoFieldProps) => {
     )
 }
 
-const SaloonProfileAction = ({ id, status = '', onchangeStatus }: { id?: string, status: string, onchangeStatus: any }) => {
+const SaloonProfileAction = ({ id, status = '', onchangeStatus, fetchData }: { id?: string, status: string, onchangeStatus: any, fetchData: () => void }) => {
     const dispatch = useAppDispatch()
     const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -129,12 +130,12 @@ const SaloonProfileAction = ({ id, status = '', onchangeStatus }: { id?: string,
                     الحساب سيتم حذفها أيضًا. هذا لا يمكن التراجع عن الإجراء.
                 </p>
             </ConfirmDialog>
-            <EditSaloonProfile />
+            <EditSaloonProfile fetchData={fetchData} />
         </>
     )
 }
 
-const SaloonProfile = ({ data = {} }: CustomerProfileProps) => {
+const SaloonProfile = ({ data = {}, fetchData }: CustomerProfileProps) => {
 
     const [profileStatus, setProfileStatus] = useState(data?.isActive)
 
@@ -208,7 +209,7 @@ const SaloonProfile = ({ data = {} }: CustomerProfileProps) => {
                     </div>
                 </div>
                 <div className="mt-4 flex flex-col xl:flex-row gap-2">
-                    <SaloonProfileAction id={data._id} status={profileStatus} onchangeStatus={setProfileStatus} />
+                    <SaloonProfileAction id={data._id} status={profileStatus} onchangeStatus={setProfileStatus} fetchData={fetchData} />
                 </div>
             </div>
         </Card>

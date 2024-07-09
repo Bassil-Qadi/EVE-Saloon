@@ -9,6 +9,8 @@ export type UserState = {
     role?: string,
     phone?: string,
     id?: string
+    saloonId?: string
+    otp?: string
 }
 
 const initialState: UserState = {
@@ -18,7 +20,8 @@ const initialState: UserState = {
     authority: [],
     role: '',
     phone: '',
-    id: ''
+    id: '',
+    otp: ''
 }
 
 const userSlice = createSlice({
@@ -29,10 +32,11 @@ const userSlice = createSlice({
             state.avatar = action.payload?.avatar
             state.email = action.payload?.email
             state.name = action.payload?.name
-            state.authority = action.payload?.authority
+            state.authority = [action.payload?.role || '']
             state.role = action.payload?.role
             state.phone = action.payload?.phone
             state.id = action.payload?.id
+            state.saloonId = action.payload?.saloonId
         },
     },
 })

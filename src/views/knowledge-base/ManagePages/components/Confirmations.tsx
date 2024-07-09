@@ -1,7 +1,6 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import Dialog from '@/components/ui/Dialog'
 import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import Upload from '@/components/ui/Upload'
 import {
@@ -23,9 +22,6 @@ import { FcImageFile } from 'react-icons/fc'
 
 const Confirmations = ({ data, selectedSaloonId }: { data: Page[], selectedSaloonId: string }) => {
     const dispatch = useAppDispatch()
-
-    const categoryAddTitleInputRef = useRef<HTMLInputElement>(null)
-    const categoryAddDescInputRef = useRef<HTMLInputElement>(null)
 
     const [workImage, setWorkImage] = useState()
 

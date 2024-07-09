@@ -15,7 +15,7 @@ import * as Yup from 'yup'
 
 type FormModel = {
     name: string
-    price: string
+    price: number
     duration: string
     saloon: string
     maxService: string
@@ -99,7 +99,7 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
         <Formik
             initialValues={{
                 name: '',
-                price: '',
+                price: 0,
                 duration: '',
                 saloon: '',
                 saloonCategory: '',

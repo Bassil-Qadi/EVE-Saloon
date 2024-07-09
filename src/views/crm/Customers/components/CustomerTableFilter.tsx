@@ -62,6 +62,10 @@ const CustomControl = ({ children, ...props }: ControlProps<Option>) => {
 const CustomerTableFilter = () => {
     const dispatch = useAppDispatch()
 
+    const currentUserId = useAppSelector(
+        state => state.auth.user.id
+    )
+
     const [saloonsList, setSaloonsList] = useState([])
 
     const { selectedSaloon } = useAppSelector(
@@ -72,7 +76,7 @@ const CustomerTableFilter = () => {
         let response = dispatch(getSaloonsList())
         response.then((data: any) => {
             if(data.payload) {
-                let newSaloonsList = data?.payload?.map((saloon: any) => {
+                let newSaloonsList = data?.payload?.filter((saloon: any) => saloon?.createdBy?.id === currentUserId)?.map((saloon: any) => {
                     return {
                         ...saloon,
                         label: saloon.name,

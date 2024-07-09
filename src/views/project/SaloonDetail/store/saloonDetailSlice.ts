@@ -5,7 +5,7 @@ import {
     apPutCrmCustomer,
 } from '@/services/CrmService'
 
-import { apPutSaloon, apiGetSaloonDetails, apiAddSaloonService, apiDeleteService } from '@/services/ProjectService'
+import { apPutSaloon, apiGetSaloonDetails, apiAddSaloonService, apiDeleteService, apiAddSaloonUser, apiDeleteSaloonUser } from '@/services/ProjectService'
 
 export const SLICE_NAME = 'projectSaloonDetails'
 
@@ -99,11 +99,13 @@ export type CustomerDetailState = {
     paymentMethodData: PaymentMethod[]
     newCategoryDialog: boolean
     newServiceDialog: boolean
+    newSaloonUserDialog: boolean
     deletePaymentMethodDialog: boolean
     editPaymentMethodDialog: boolean
     editSaloonDetailDialog: boolean
     deleteCategoryDialog: boolean
     deleteServiceDialog: boolean
+    deleteSaloonUserDialog: boolean
     selectedCategory: string
     selectedService: string
     selectedCard: Partial<PaymentMethod>
@@ -131,6 +133,14 @@ export const getSaloon = createAsyncThunk(
     }
 )
 
+
+export const addSaloonUser = createAsyncThunk(
+    SLICE_NAME + '/addSaloonUser',
+    async (data: any) => {
+        const response = await apiAddSaloonUser(data)
+        return response.data
+    }
+)
 
 // export const deleteCustomer = createAsyncThunk(
 //     SLICE_NAME + '/deleteCustomer',
@@ -167,6 +177,14 @@ export const deleteService = createAsyncThunk(
     }
 )
 
+export const deleteSaloonUser = createAsyncThunk(
+    SLICE_NAME + '/deleteSaloonUser',
+    async (data: any) => {
+        const response = await apiDeleteSaloonUser(data)
+        return response.data
+    }
+)
+
 export const putSaloon = createAsyncThunk(
     SLICE_NAME + '/putSaloon',
     async (data: Saloon) => {
@@ -187,8 +205,10 @@ const initialState: CustomerDetailState = {
     editSaloonDetailDialog: false,
     newCategoryDialog: false,
     newServiceDialog: false,
+    newSaloonUserDialog: false,
     deleteCategoryDialog: false, 
     deleteServiceDialog: false,
+    deleteSaloonUserDialog: false,
     selectedCategory: '',
     selectedService: '',
     selectedCard: {},
@@ -243,8 +263,14 @@ const saloonDetailSlice = createSlice({
         toggleNewServiceDialog: (state, action) => {
             state.newServiceDialog = action.payload
         },
+        toggleNewSaloonUserDialog: (state, action) => {
+            state.newSaloonUserDialog = action.payload
+        },
         toggleDeleteServiceDialog: (state, action) => {
             state.deleteServiceDialog = action.payload
+        },
+        toggleDeleteSaloonUser: (state, action) => {
+            state.deleteSaloonUserDialog = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -266,9 +292,33 @@ const saloonDetailSlice = createSlice({
             .addCase(getSaloon.rejected, (state) => {
                 state.loading = false
             })
-            // .addCase(getCustomer.pending, (state) => {
+            // .addCase(addSaloonUser.pending, (state) => {
             //     state.loading = true
             // })
+            // .addCase(addSaloonUser.fulfilled, (state) => {
+            //     state.loading = false
+            // })
+            // .addCase(addSaloonUser.rejected, (state) => {
+            //     state.loading = false
+            // })
+            .addCase(addService.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(addService.fulfilled, (state) => {
+                state.loading = false
+            })
+            .addCase(addService.rejected, (state) => {
+                state.loading = false
+            })
+            .addCase(deleteService.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(deleteService.fulfilled, (state) => {
+                state.loading = false
+            })
+            .addCase(deleteService.rejected, (state) => {
+                state.loading = false
+            })
     },
 })
 
@@ -288,7 +338,9 @@ export const {
     toggleDeleteCategoryDialog,
     setDeletedCategory,
     setDeletedService,
-    toggleDeleteServiceDialog
+    toggleDeleteServiceDialog,
+    toggleDeleteSaloonUser,
+    toggleNewSaloonUserDialog
 } = saloonDetailSlice.actions
 
 export default saloonDetailSlice.reducer

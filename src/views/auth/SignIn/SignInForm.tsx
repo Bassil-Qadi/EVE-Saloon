@@ -18,13 +18,13 @@ interface SignInFormProps extends CommonProps {
 }
 
 type SignInFormSchema = {
-    phone: string
+    email: string
     password: string
     rememberMe: boolean
 }
 
 const validationSchema = Yup.object().shape({
-    phone: Yup.string().required('Please enter your phone number'),
+    email: Yup.string().required('Please enter your email address'),
     password: Yup.string().required('Please enter your password'),
     rememberMe: Yup.bool(),
 })
@@ -45,10 +45,10 @@ const SignInForm = (props: SignInFormProps) => {
         values: SignInFormSchema,
         setSubmitting: (isSubmitting: boolean) => void
     ) => {
-        const { phone, password } = values
+        const { email, password } = values
         setSubmitting(true)
 
-        const result = await signIn({ phone, password })
+        const result = await signIn({ email, password })
 
         if (result?.status === 'failed') {
             setMessage(result.message)
@@ -66,7 +66,7 @@ const SignInForm = (props: SignInFormProps) => {
             )}
             <Formik
                 initialValues={{
-                    phone: '',
+                    email: '',
                     password: '',
                     rememberMe: true,
                 }}
@@ -83,18 +83,18 @@ const SignInForm = (props: SignInFormProps) => {
                     <Form>
                         <FormContainer>
                             <FormItem
-                                label="رقم الجوال"
+                                label="البريد الإلكتروني"
                                 invalid={
-                                    (errors.phone &&
-                                        touched.phone) as boolean
+                                    (errors.email &&
+                                        touched.email) as boolean
                                 }
-                                errorMessage={errors.phone}
+                                errorMessage={errors.email}
                             >
                                 <Field
                                     type="text"
                                     autoComplete="off"
-                                    name="phone"
-                                    placeholder="رقم الجوال"
+                                    name="email"
+                                    placeholder="ادخل البريد الالكتروني"
                                     component={Input}
                                 />
                             </FormItem>

@@ -6,11 +6,12 @@ import type {
     ResetPassword,
     SignInResponse,
     SignUpResponse,
+    OtpCredential,
 } from '@/@types/auth'
 
 export async function apiSignIn(data: SignInCredential) {
     return ApiService.fetchData<SignInResponse>({
-        url: '/auth/login',
+        url: '/saloon/login',
         method: 'post',
         data
     })
@@ -18,7 +19,15 @@ export async function apiSignIn(data: SignInCredential) {
 
 export async function apiSignUp(data: SignUpCredential) {
     return ApiService.fetchData<SignUpResponse>({
-        url: '/auth/register',
+        url: '/saloon/register',
+        method: 'post',
+        data,
+    })
+}
+
+export async function apiVerifyOtp(data: OtpCredential) {
+    return ApiService.fetchData<any>({
+        url: '/auth/user/verify-otp',
         method: 'post',
         data,
     })

@@ -9,6 +9,18 @@ const authRoute: Routes = [
         authority: [],
     },
     {
+        key: 'addNewSaloon',
+        path: `/add-saloon`,
+        component: lazy(() => import('@/views/NewRegisteration/AddNewSaloon')),
+        authority: [],
+    },
+    {
+        key: 'verifyOtp',
+        path: `/verify-otp`,
+        component: lazy(() => import('@/views/NewRegisteration/VerifyOtp')),
+        authority: [],
+    },
+    {
         key: 'signIn',
         path: `/sign-in`,
         component: lazy(() => import('@/views/auth/SignIn')),

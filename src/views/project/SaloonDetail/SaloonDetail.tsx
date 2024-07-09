@@ -7,6 +7,7 @@ import SaloonProfile from './components/SaloonProfile'
 import PaymentHistory from './components/PaymentHistory'
 import CategoriesTable from './components/CategoriesTable'
 import ServicesTable from './components/ServicesTable'
+import AdminsTable from './components/AdminsTable'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import Notification from '@/components/ui/Notification'
 import toast from '@/components/ui/toast'
@@ -21,10 +22,13 @@ import reducer, {
     toggleDeleteServiceDialog,
     getSaloon,
     deleteService,
+    toggleDeleteSaloonUser,
+    deleteSaloonUser,
 } from './store'
 import { useAppSelector as saloonAppSelector } from '@/views/project/ProjectList/store'
 import NewProjectDialog from '../CategoryList/components/NewProjectDialog'
 import NewServiceDialog from './components/NewServiceDialog'
+import NewSaloonUserDialog from './components/NewSaloonUserDialog'
 
 import { injectReducer } from '@/store'
 import isEmpty from 'lodash/isEmpty'
@@ -33,6 +37,7 @@ import {
     deleteCategory,
     getCategoryList,
     getSaloonServices,
+    getSaloonUsers
 } from '../CategoryList/store'
 import UserTable from '@/views/bookings/Customers/components/UsersTable'
 
@@ -41,6 +46,7 @@ injectReducer('projectSaloonDetails', reducer)
 const SaloonDetail = () => {
     const dispatch = useAppDispatch()
     const [saloonServices, setSaloonServices] = useState([])
+    const [saloonUsers, setSaloonUsers] = useState([])
 
     const query = useQuery()
 
@@ -49,6 +55,9 @@ const SaloonDetail = () => {
     )
     const serviceDialogOpen = useAppSelector(
         (state) => state.projectSaloonDetails.data.deleteServiceDialog,
+    )
+    const saloonUserDialogOpen = useAppSelector(
+        (state) => state.projectSaloonDetails.data.deleteSaloonUserDialog,
     )
     const data = useAppSelector(
         (state) => state.projectSaloonDetails.data.profileData.saloon,
@@ -72,16 +81,27 @@ const SaloonDetail = () => {
     useEffect(() => {
         fetchData()
         fetchSaloonServices()
+        fetchSaloonUsers()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [query])
+    }, [query, data?._id])
+
+    const fetchSaloonUsers = () => {
+        if(data?._id) {
+            let response = dispatch(getSaloonUsers({ saloonId: data._id }))
+            response.then((data) => {
+                if(data.error) setSaloonUsers([])
+                if (data.payload) {
+                    setSaloonUsers(data.payload)
+                }
+            })
+        }
+    }
 
     const fetchSaloonServices = () => {
         if (data?._id) {
             let response = dispatch(getSaloonServices({ saloonId: data._id }))
             response.then((data) => {
-
                 if(data.error) setSaloonServices([])
-
                 if (data.payload) {
                     setSaloonServices(data.payload)
                 }
@@ -104,6 +124,10 @@ const SaloonDetail = () => {
 
     const onServiceDialogClose = () => {
         dispatch(toggleDeleteServiceDialog(false))
+    }
+
+    const onSaloonUserDialogClose = () => {
+        dispatch(toggleDeleteSaloonUser(false))
     }
 
     const onDeleteCategory = () => {
@@ -160,7 +184,39 @@ const SaloonDetail = () => {
                         title={'Successfully Deleted'}
                         type="success"
                     >
-                        تم حذف الخدمة الحالة بنجاح
+                        تم حذف الخدمة بنجاح
+                    </Notification>,
+                )
+            }
+        })
+    }
+
+    const onDeleteSaloonUser = () => {
+        let response = dispatch(deleteSaloonUser(selectedCategory))
+
+        response.then((data) => {
+
+            if(data.error) {
+                toast.push(
+                    <Notification
+                        title={'Something went wrong'}
+                        type="danger"
+                    >
+                        الرجاء المحاولة مرة أخرى
+                    </Notification>,
+                )
+            }
+
+            if (data.payload.responseType === 'Success') {
+                dispatch(toggleDeleteSaloonUser(false))
+                fetchSaloonUsers()
+                // fetchData()
+                toast.push(
+                    <Notification
+                        title={'Successfully Deleted'}
+                        type="success"
+                    >
+                        تم حذف المسؤول بنجاح
                     </Notification>,
                 )
             }
@@ -173,7 +229,7 @@ const SaloonDetail = () => {
                 {!isEmpty(data) && (
                     <div className="flex flex-col xl:flex-row gap-4">
                         <div>
-                            <SaloonProfile data={data} />
+                            <SaloonProfile data={data} fetchData={fetchData} />
                         </div>
                         <div className="w-full">
                             <AdaptableCard>
@@ -196,6 +252,7 @@ const SaloonDetail = () => {
                                         userId={query.get('id')}
                                     />
                                 )}
+                                {saloonUsers && <AdminsTable data={saloonUsers} userId={query.get('id')} />}
                                 {/* <PaymentMethods /> */}
                             </AdaptableCard>
                         </div>
@@ -212,6 +269,7 @@ const SaloonDetail = () => {
                     <h3 className="mt-8">No user found!</h3>
                 </div>
             )}
+            <NewSaloonUserDialog fetchSaloonUsers={fetchSaloonUsers} />
             <NewProjectDialog saloonId={data?._id} fetchData={fetchData} />
             <NewServiceDialog
                 saloonStaff={saloonStaff}
@@ -246,6 +304,21 @@ const SaloonDetail = () => {
                 <p>
                     هل أنت متأكد أنك تريد حذف هذه الخدمة كل سجل سيتم حذف
                     المتعلقة بهذه الخدمة أيضًا. هذا لا يمكن التراجع عن الإجراء.
+                </p>
+            </ConfirmDialog>
+            <ConfirmDialog
+                isOpen={saloonUserDialogOpen}
+                type="danger"
+                title="حذف المسؤول"
+                confirmButtonColor="red-600"
+                onClose={onSaloonUserDialogClose}
+                onRequestClose={onSaloonUserDialogClose}
+                onCancel={onSaloonUserDialogClose}
+                onConfirm={onDeleteSaloonUser}
+            >
+                <p>
+                    هل أنت متأكد أنك تريد حذف هذا المسؤول كل سجل سيتم حذف
+                    المتعلقة بهذا المسؤول أيضًا. هذا لا يمكن التراجع عن الإجراء.
                 </p>
             </ConfirmDialog>
         </Container>

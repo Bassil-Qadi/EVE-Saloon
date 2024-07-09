@@ -10,13 +10,22 @@ const ProjectListContent = () => {
 
     const loading = useAppSelector((state) => state.projectList.data.loading)
 
-    const currentUserId = useAppSelector(
-        state => state.auth.user.id
+    const { id, role, saloonId } = useAppSelector(
+        state => state.auth.user
     )
 
-    const clinicsList = useAppSelector(
-        (state) => state.projectList.data.saloonsList.filter(saloon => saloon.type === 'clinic' && saloon.createdBy?.id === currentUserId )
+    // const clinicsList = useAppSelector(
+    //     (state) => state.projectList.data.saloonsList.filter(saloon => saloon.type === 'clinic' && saloon.createdBy?.id === currentUserId )
+    // )
+
+    const ownerClinicsList = useAppSelector(
+        (state) => state.projectList.data.saloonsList.filter(saloon => saloon.type === 'clinic' && saloon.createdBy?.id === id)
     )
+
+    const userClinicsList = useAppSelector(
+        (state) => state.projectList.data.saloonsList.filter(saloon => saloon.type === 'clinic' && saloon?._id === saloonId)
+    )
+
     const view = useAppSelector((state) => state.projectList.data.view)
     const { sort, search } = useAppSelector(
         (state) => state.projectList.data.query
@@ -39,17 +48,17 @@ const ProjectListContent = () => {
                     <Spinner size={40} />
                 </div>
             )}
-            {view === 'grid' && clinicsList.length > 0 && !loading && (
+            {view === 'grid' && role === 'owner' && ownerClinicsList.length > 0 && !loading && (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {clinicsList?.filter(clinic => clinic.name.toLocaleLowerCase()?.startsWith(search))?.map((clinic) => (
+                    {ownerClinicsList?.filter(clinic => clinic.name.toLocaleLowerCase()?.startsWith(search))?.map((clinic) => (
                         <GridItem key={clinic._id} data={clinic} />
                     ))}
                 </div>
             )}
-            {view === 'list' &&
-                clinicsList.length > 0 &&
+            {view === 'list' &&  role === 'user' &&
+                userClinicsList.length > 0 &&
                 !loading &&
-                clinicsList?.filter(clinic => clinic.name.toLocaleLowerCase()?.startsWith(search))?.map((clinic) => (
+                userClinicsList?.filter(clinic => clinic.name.toLocaleLowerCase()?.startsWith(search))?.map((clinic) => (
                     <ListItem key={clinic._id} data={clinic} />
                 ))}
         </div>

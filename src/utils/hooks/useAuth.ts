@@ -1,4 +1,4 @@
-import { apiSignIn, apiSignOut, apiSignUp } from '@/services/AuthService'
+import { apiSignIn, apiSignOut, apiSignUp, apiVerifyOtp } from '@/services/AuthService'
 import {
     setUser,
     signInSuccess,
@@ -10,7 +10,7 @@ import appConfig from '@/configs/app.config'
 import { REDIRECT_URL_KEY } from '@/constants/app.constant'
 import { useNavigate } from 'react-router-dom'
 import useQuery from './useQuery'
-import type { SignInCredential, SignUpCredential } from '@/@types/auth'
+import type { OtpCredential, SignInCredential, SignUpCredential } from '@/@types/auth'
 
 type Status = 'success' | 'failed'
 
@@ -72,12 +72,12 @@ function useAuth() {
         try {
             const resp = await apiSignUp(values)
             if (resp.data) {
-                const { tokens } = resp.data
-                dispatch(signInSuccess(tokens.access.token))
-                if (resp.data.user) {
+                // const { tokens } = resp.data
+                // dispatch(signInSuccess(tokens.access.token))
+                if (resp.data.data.user) {
                     dispatch(
                         setUser(
-                            resp.data.user || {
+                            { ...resp.data.data.user, otp: resp.data.data.otp } || {
                                 avatar: '',
                                 userName: 'Anonymous',
                                 authority: ['USER'],
@@ -89,7 +89,43 @@ function useAuth() {
                 }
                 const redirectUrl = query.get(REDIRECT_URL_KEY)
                 navigate(
-                    redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath
+                    redirectUrl ? redirectUrl : appConfig.verifyEntryPath
+                )
+                return {
+                    status: 'success',
+                    message: '',
+                }
+            }
+            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        } catch (errors: any) {
+            return {
+                status: 'failed',
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
+    }
+
+    const verifyOtp = async (values: OtpCredential) => {
+        try {
+            const resp = await apiVerifyOtp(values)
+            if (resp.data) {
+                // const { tokens } = resp.data
+                // dispatch(signInSuccess(tokens.access.token))
+                if (resp.data.user) {
+                    dispatch(
+                        setUser(
+                            resp.data.user || {
+                                avatar: '',
+                                userName: 'Anonymous',
+                                authority: ['USER'],
+                                email: '',
+                            }
+                        )
+                    )
+                }
+                const redirectUrl = query.get(REDIRECT_URL_KEY)
+                navigate(
+                    redirectUrl ? redirectUrl : appConfig.newSaloonRegistration
                 )
                 return {
                     status: 'success',
@@ -115,7 +151,8 @@ function useAuth() {
                 authority: [],
                 role: '',
                 phone: '',
-                id: ''
+                id: '',
+                otp: ''
             })
         )
         navigate(appConfig.unAuthenticatedEntryPath)
@@ -130,6 +167,7 @@ function useAuth() {
         authenticated: token && signedIn,
         signIn,
         signUp,
+        verifyOtp,
         signOut,
     }
 }

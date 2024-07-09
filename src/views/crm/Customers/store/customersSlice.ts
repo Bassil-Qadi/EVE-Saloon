@@ -136,8 +136,7 @@ export const getUsers = createAsyncThunk(
     'crmCustomers/data/getUsers',
     async (data: any) => {
         const response = await apiGetCrmUsers<
-            GetCrmUsersResponse,
-            TableQueries
+            GetCrmUsersResponse
         >(data)
 
         return response.data
@@ -257,6 +256,11 @@ const customersSlice = createSlice({
             })
             .addCase(getUsers.pending, (state) => {
                 state.loading = true
+            })
+            .addCase(getUsers.rejected, (state) => {
+                state.loading = false
+                state.usersList = []
+                state.tableData.total = 0
             })
             .addCase(getCustomerStatistic.fulfilled, (state, action) => {
                 state.statisticData = action.payload

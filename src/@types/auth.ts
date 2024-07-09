@@ -1,5 +1,5 @@
 export type SignInCredential = {
-    phone: string
+    email: string
     password: string
 }
 
@@ -31,6 +31,19 @@ export type SignInResponse = {
         updatedAt: string,
         id: string
     }
+    data: {
+            otp: string
+            user: {
+            name: string,
+            phone: string,
+            email: string,
+            isVerified: boolean,
+            role: string,
+            createdAt: string,
+            updatedAt: string,
+            id: string
+        }
+    }
 }
 
 export type SignUpResponse = SignInResponse
@@ -49,4 +62,9 @@ export type ForgotPassword = {
 
 export type ResetPassword = {
     password: string
+}
+
+export type OtpCredential = {
+    otp: string
+    phone: string | undefined
 }

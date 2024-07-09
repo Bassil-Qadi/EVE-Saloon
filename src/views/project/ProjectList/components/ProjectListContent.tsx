@@ -10,13 +10,18 @@ const ProjectListContent = () => {
 
     const loading = useAppSelector((state) => state.projectList.data.loading)
 
-    const currentUserId = useAppSelector(
-        state => state.auth.user.id
+    const { id, role, saloonId } = useAppSelector(
+        state => state.auth.user
     )
 
-    const saloonsList = useAppSelector(
-        (state) => state.projectList.data.saloonsList.filter(saloon => saloon.type === 'saloon' && saloon.createdBy?.id === currentUserId)
+    const ownerSaloonsList = useAppSelector(
+        (state) => state.projectList.data.saloonsList.filter(saloon => saloon.type === 'saloon' && saloon.createdBy?.id === id)
     )
+
+    const userSaloonsList = useAppSelector(
+        (state) => state.projectList.data.saloonsList.filter(saloon => saloon.type === 'saloon' && saloon?._id === saloonId)
+    )
+
     const view = useAppSelector((state) => state.projectList.data.view)
     const { sort, search } = useAppSelector(
         (state) => state.projectList.data.query
@@ -39,19 +44,26 @@ const ProjectListContent = () => {
                     <Spinner size={40} />
                 </div>
             )}
-            {view === 'grid' && saloonsList.length > 0 && !loading && (
+            {view === 'grid' && role === 'owner' && ownerSaloonsList.length > 0 && !loading && (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {saloonsList?.filter(saloon => saloon.name.toLocaleLowerCase()?.startsWith(search))?.map((saloon) => (
+                    {ownerSaloonsList?.filter(saloon => saloon.name.toLocaleLowerCase()?.startsWith(search))?.map((saloon) => (
                         <GridItem key={saloon._id} data={saloon} />
                     ))}
                 </div>
             )}
-            {view === 'list' &&
-                saloonsList.length > 0 &&
+            {view === 'grid' && role === 'user' && userSaloonsList.length > 0 && !loading && (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {userSaloonsList?.filter(saloon => saloon.name.toLocaleLowerCase()?.startsWith(search))?.map((saloon) => (
+                        <GridItem key={saloon._id} data={saloon} />
+                    ))}
+                </div>
+            )}
+            {/* {view === 'list' &&
+                filteredSaloonsList.length > 0 &&
                 !loading &&
-                saloonsList?.filter(saloon => saloon.name.toLocaleLowerCase()?.startsWith(search))?.map((saloon) => (
+                filteredSaloonsList?.filter(saloon => saloon.name.toLocaleLowerCase()?.startsWith(search))?.map((saloon) => (
                     <ListItem key={saloon._id} data={saloon} />
-                ))}
+                ))} */}
         </div>
     )
 }

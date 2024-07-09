@@ -18,7 +18,7 @@ import { getSaloonsList } from '@/views/project/ProjectList/store'
 
 const CustomersTableTools = () => {
     const dispatch = useAppDispatch()
-    const [saloonsList, setSaloonsList] = useState([])
+    // const [saloonsList, setSaloonsList] = useState([])
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -26,9 +26,9 @@ const CustomersTableTools = () => {
         (state) => state.crmCustomers.data.tableData
     )
 
-    useEffect(() => {
-        fetchSaloons()
-    }, [])
+    // useEffect(() => {
+    //     fetchSaloons()
+    // }, [])
 
     const handleInputChange = (val: string) => {
         const newTableData = cloneDeep(tableData)
@@ -43,21 +43,21 @@ const CustomersTableTools = () => {
         }
     }
 
-    const fetchSaloons = () => {
-        let response = dispatch(getSaloonsList())
-        response.then(data => {
-            if(data.payload) {
-                let newSaloonsList = data.payload.map((saloon: any) => {
-                    return {
-                        ...saloon,
-                        label: saloon.name,
-                        value: saloon._id
-                    }
-                })
-                setSaloonsList(newSaloonsList)
-            }
-        })
-    }
+    // const fetchSaloons = () => {
+    //     let response = dispatch(getSaloonsList())
+    //     response.then(data => {
+    //         if(data.payload) {
+    //             let newSaloonsList = data?.payload?.filter((saloon: any) => saloon?.createdBy?.id === currentUserId)?.map((saloon: any) => {
+    //                 return {
+    //                     ...saloon,
+    //                     label: saloon.name,
+    //                     value: saloon._id
+    //                 }
+    //             })
+    //             setSaloonsList(newSaloonsList)
+    //         }
+    //     })
+    // }
 
     const fetchData = (data: TableQueries) => {
         dispatch(setTableData(data))
@@ -81,7 +81,7 @@ const CustomersTableTools = () => {
     return (
         <div className="md:flex items-center justify-between">
             <div className="md:flex items-center gap-4">
-                <CustomerTableFilter saloonsList={saloonsList} />
+                <CustomerTableFilter />
                 <Button
                     size="sm"
                     variant="twoTone"

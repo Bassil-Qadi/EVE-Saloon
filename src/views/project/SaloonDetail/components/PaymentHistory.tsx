@@ -47,7 +47,7 @@ const columns = [
             const row = props.row.original
             return (
                 <div className="flex items-center">
-                    <span>{DAYS_TO_ARABIC[row.day]}</span>
+                    <span>{row.day}</span>
                 </div>
             )
         },
