@@ -141,7 +141,7 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
                             />
                         </FormItem>
                         <FormItem
-                            label="المدة"
+                            label="المدة (بالدقيقة)"
                             invalid={errors.duration && touched.duration}
                             errorMessage={errors.duration}
                         >
@@ -154,7 +154,7 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
                             />
                         </FormItem>
                         <FormItem
-                            label="الحد الأعلى للخدمة"
+                            label="الحد الأعلى لطلب الخدمة"
                             invalid={errors.maxService && touched.maxService}
                             errorMessage={errors.maxService}
                         >

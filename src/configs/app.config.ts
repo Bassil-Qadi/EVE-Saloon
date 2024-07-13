@@ -15,7 +15,7 @@ const appConfig: AppConfig = {
     authenticatedEntryPath: '/app/sales/dashboard',
     unAuthenticatedEntryPath: '/sign-in',
     verifyEntryPath: '/verify-otp',
-    newSaloonRegistration: 'add-saloon',
+    newSaloonRegistration: '/add-saloon',
     tourPath: '/app/account/kyc-form',
     locale: 'ar',
     enableMock: true,

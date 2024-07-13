@@ -112,6 +112,7 @@ function useAuth() {
                 // const { tokens } = resp.data
                 // dispatch(signInSuccess(tokens.access.token))
                 if (resp.data.user) {
+                    console.log("I'm here")
                     dispatch(
                         setUser(
                             resp.data.user || {
@@ -125,7 +126,8 @@ function useAuth() {
                 }
                 const redirectUrl = query.get(REDIRECT_URL_KEY)
                 navigate(
-                    redirectUrl ? redirectUrl : appConfig.newSaloonRegistration
+                    // redirectUrl ? redirectUrl : appConfig.newSaloonRegistration
+                    appConfig.newSaloonRegistration
                 )
                 return {
                     status: 'success',

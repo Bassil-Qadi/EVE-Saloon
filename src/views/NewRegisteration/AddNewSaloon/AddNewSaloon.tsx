@@ -48,6 +48,7 @@ type FormModel = {
 type Category = {
     name?: string
     label?: string
+    id?: string
 }
 
 const saudiArabiaStates = [
@@ -98,9 +99,6 @@ const NewProjectForm = () => {
                     var latitude = position.coords.latitude
                     var longitude = position.coords.longitude
 
-                    // Output the latitude and longitude
-                    console.log('Latitude: ' + latitude)
-                    console.log('Longitude: ' + longitude)
                     setUserLocation({
                         lat: latitude.toString(),
                         lng: longitude.toString(),
@@ -137,7 +135,7 @@ const NewProjectForm = () => {
             type
         } = formValue
 
-        let newCategories = categories.map((category: any) => category._id)
+        let newCategories = categories.map((category: any) => category.id)
 
         formData.append('name', name)
         formData.append('discription', description)
@@ -179,7 +177,7 @@ const NewProjectForm = () => {
                 return {
                     ...cat,
                     label: cat.name,
-                    value: cat.name,
+                    value: cat.id,
                 }
             })
             setCategories(updatedCategories)
