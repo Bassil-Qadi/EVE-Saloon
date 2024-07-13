@@ -29,7 +29,10 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
     const [saloonsList, setSaloonsList] = useState([])
     const [saloonCategoriesList, setSaloonCategoriresList] = useState([])
     const [saloonStaffList, setSaloonStaffList] = useState([])
+
     const currentUserId = useAppSelector((state) => state.auth.user.id)
+    const currentUserRole = useAppSelector((state) => state.auth.user.role)
+    const currentUserSaloonId = useAppSelector(state => state.auth.user.saloonId) 
 
     const validationSchema = Yup.object().shape({
         name: Yup.string().required('الرجاء إدحال الاسم'),
@@ -48,7 +51,7 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
         response.then((data) => {
             const updatedSaloons = data.payload
                 .filter(
-                    (saloon: any) => saloon?.createdBy?.id === currentUserId,
+                    (saloon: any) => currentUserRole === 'owner' ? saloon?.createdBy?.id === currentUserId : saloon?._id === currentUserSaloonId,
                 )
                 .map((saloon: any) => {
                     return {
@@ -201,7 +204,6 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
                                             options={saloonCategoriesList}
                                             onChange={(options: any) =>
                                                 {
-                                                    console.log(options)
                                                     form.setFieldValue(
                                                         field.name,
                                                         options._id,

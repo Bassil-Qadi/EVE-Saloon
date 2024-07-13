@@ -56,17 +56,17 @@ const CategoriesTable = ({ data }: any) => {
     }
 
     const columns = [
-        columnHelper.accessor('_id', {
-            header: 'ID',
-            cell: (props) => {
-                const row = props.row.original
-                return (
-                    <div>
-                        <span className="cursor-pointer">{row._id}</span>
-                    </div>
-                )
-            },
-        }),
+        // columnHelper.accessor('_id', {
+        //     header: 'ID',
+        //     cell: (props) => {
+        //         const row = props.row.original
+        //         return (
+        //             <div>
+        //                 <span className="cursor-pointer">{row._id}</span>
+        //             </div>
+        //         )
+        //     },
+        // }),
         columnHelper.accessor('name', {
             header: 'الاسم',
             cell: (props) => {
