@@ -83,7 +83,7 @@ const NewProjectForm = () => {
         const { name, description, categories, address, file, images, phone, workingTime } =
             formValue
 
-        let newCategories = categories.map((category: any) => category._id)
+        let newCategories = categories.map((category: any) => category.id)
 
         formData.append('name', name)
         formData.append('discription', description)

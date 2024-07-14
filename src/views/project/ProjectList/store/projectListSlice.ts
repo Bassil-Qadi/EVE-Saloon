@@ -223,6 +223,15 @@ const projectListSlice = createSlice({
             .addCase(putProject.fulfilled, (state, action) => {
                 state.projectList = action.payload
             })
+            .addCase(addSaloon.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(addSaloon.fulfilled, (state) => {
+                state.loading = false
+            })
+            .addCase(addSaloon.rejected, (state) => {
+                state.loading = false
+            })
     },
 })
 
