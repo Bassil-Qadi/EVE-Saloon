@@ -104,8 +104,8 @@ const Profile = ({
         values: ProfileFormModel,
         setSubmitting: (isSubmitting: boolean) => void
     ) => {
-        console.log('values', values)
-        let putData = { ...values, updatedBy: data.id }
+        const { email, name, phone, role } = values
+        let putData = { email, name, phone, role, updatedBy: data.id }
         let response = dispatch(putUser(putData))
 
         response.then(data => {

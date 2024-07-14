@@ -29,6 +29,12 @@ const CustomersTableTools = () => {
     const currentUserId = useAppSelector(
         state => state.auth.user.id
     )
+    const currentUserRole = useAppSelector(
+        state => state.auth.user.role
+    )
+    const currentUserSaloonId = useAppSelector(
+        state => state?.auth?.user?.saloonId
+    )
 
     useEffect(() => {
         fetchSaloons()
@@ -51,7 +57,7 @@ const CustomersTableTools = () => {
         let response = dispatch(getSaloonsList())
         response.then(data => {
             if(data.payload) {
-                let newSaloonsList = data?.payload?.filter((saloon: any) => saloon?.createdBy?.id === currentUserId)?.map((saloon: any) => {
+                let newSaloonsList = data?.payload?.filter((saloon: any) => currentUserRole === 'owner' ? saloon?.createdBy?.id === currentUserId : saloon?._id === currentUserSaloonId)?.map((saloon: any) => {
                     return {
                         ...saloon,
                         label: saloon.name,
