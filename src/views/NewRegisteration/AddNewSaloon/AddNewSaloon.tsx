@@ -370,7 +370,7 @@ const NewProjectForm = () => {
                                                                 type="checkbox"
                                                                 name={`workingTime.${index}.selected`}
                                                             />
-                                                            {time.day}
+                                                            <span className='ms-2'>{time.day}</span>
                                                         </label>
                                                         {values.workingTime[
                                                             index
