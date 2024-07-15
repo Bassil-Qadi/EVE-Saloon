@@ -236,7 +236,7 @@ const appsRoute: Routes = [
     },
     {
         key: 'appsBanners.manageBanners',
-        path: `${APP_PREFIX_PATH}/banners/manage-banners`,
+        path: `${APP_PREFIX_PATH}/offers/manage-offers`,
         component: lazy(() => import('@/views/project/BannersList')),
         authority: [ADMIN, USER],
     },

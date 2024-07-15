@@ -375,7 +375,7 @@ const appsNavigationConfig: NavigationTree[] = [
                 subMenu: [
                     {
                         key: 'appsBanners.manageBanners',
-                        path: `${APP_PREFIX_PATH}/banners/manage-banners`,
+                        path: `${APP_PREFIX_PATH}/offers/manage-offers`,
                         title: 'Manage Banners',
                         translateKey: 'nav.banners.manageBanners',
                         icon: '',
