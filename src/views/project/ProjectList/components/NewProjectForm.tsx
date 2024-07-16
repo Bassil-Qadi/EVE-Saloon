@@ -26,6 +26,18 @@ import {
 import { getAllCategoryList } from '../../CategoryList/store'
 
 import * as Yup from 'yup'
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
+import L from 'leaflet'
+import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import markerIconShadow from 'leaflet/dist/images/marker-shadow.png'
+
+let DefaultIcon = L.icon({
+    iconUrl: markerIcon,
+    shadowUrl: markerIconShadow,
+})
+
+L.Marker.prototype.options.icon = DefaultIcon
 
 type FormModel = {
     name: string
@@ -72,6 +84,19 @@ const NewProjectForm = () => {
     const currentUserId = useAppSelector((state) => state.auth.user.id)
 
     const [categories, setCategories] = useState([])
+    const [position, setPosition] = useState(null)
+
+    const LocationMarker = () => {
+        useMapEvents({
+            click(e) {
+                const { lat, lng } = e.latlng
+                setPosition(e.latlng)
+                // setLocation({ lat, lng });
+            },
+        })
+
+        return position === null ? null : <Marker position={position}></Marker>
+    }
 
     const onSubmit = (
         formValue: FormModel,
@@ -91,8 +116,8 @@ const NewProjectForm = () => {
         formData.append('categories', JSON.stringify(newCategories))
         formData.append('workingTime', JSON.stringify(workingTime))
         formData.append('location[type]', 'Point')
-        formData.append('location[coordinates][]', '39.19057020516831')
-        formData.append('location[coordinates][]', '21.53677989904675')
+        formData.append('location[coordinates][]', position.lat)
+        formData.append('location[coordinates][]', position.lng)
         formData.append('address', address?.value)
         formData.append('type', 'saloon')
         formData.append('logo', file)
@@ -259,11 +284,12 @@ const NewProjectForm = () => {
                                                     type="checkbox"
                                                     name={`workingTime.${index}.selected`}
                                                 />
-                                                {time.day}
+                                                <span className='ms-2'>{time.day}</span>
                                             </label>
                                             {values.workingTime[index]
                                                 .selected && (
                                                 <div>
+                                                    <span>يبدأ</span>
                                                     <Field
                                                         type="time"
                                                         name={`workingTime.${index}.open`}
@@ -274,6 +300,7 @@ const NewProjectForm = () => {
                                                         component="div"
                                                         style={{ color: 'red' }}
                                                     />
+                                                    <span className='ms-4'>ينتهي</span>
                                                     <Field
                                                         type="time"
                                                         name={`workingTime.${index}.close`}
@@ -394,6 +421,20 @@ const NewProjectForm = () => {
                                 }}
                             </Field>
                         </FormItem>
+                        <div>
+                            <p className='mb-2 font-semibold'>موقع الصالون</p>
+                        <MapContainer
+                            center={[24.774265, 46.738586]}
+                            zoom={13}
+                            style={{ height: '40vh', width: '100%', marginBottom: '20px' }}
+                        >
+                            <TileLayer
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            />
+                            <LocationMarker />
+                        </MapContainer>
+                        </div>
                         <Button block variant="solid" type="submit">
                             إرسال
                         </Button>

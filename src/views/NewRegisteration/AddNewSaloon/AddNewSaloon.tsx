@@ -28,6 +28,18 @@ import { getAllCategoryList } from '@/views/project/CategoryList/store'
 
 import * as Yup from 'yup'
 import appConfig from '@/configs/app.config'
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
+import L from 'leaflet'
+import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import markerIconShadow from 'leaflet/dist/images/marker-shadow.png'
+
+let DefaultIcon = L.icon({
+    iconUrl: markerIcon,
+    shadowUrl: markerIconShadow,
+})
+
+L.Marker.prototype.options.icon = DefaultIcon
 
 type FormModel = {
     name: string
@@ -88,33 +100,47 @@ const NewProjectForm = () => {
         lat: '',
         lng: '',
     })
+    const [position, setPosition] = useState(null)
 
-    const getUserLocation = () => {
-        if ('geolocation' in navigator) {
-            // Get the current position
-            navigator.geolocation.getCurrentPosition(
-                // Success callback
-                function (position) {
-                    // Get the latitude and longitude from the position object
-                    var latitude = position.coords.latitude
-                    var longitude = position.coords.longitude
+    const LocationMarker = () => {
+        useMapEvents({
+            click(e) {
+                const { lat, lng } = e.latlng
+                console.log(lat, lng)
+                setPosition(e.latlng)
+                // setLocation({ lat, lng });
+            },
+        })
 
-                    setUserLocation({
-                        lat: latitude.toString(),
-                        lng: longitude.toString(),
-                    })
-                },
-                // Error callback
-                function (error) {
-                    console.error(
-                        'Error Code = ' + error.code + ' - ' + error.message,
-                    )
-                },
-            )
-        } else {
-            console.error('Geolocation is not supported by this browser.')
-        }
+        return position === null ? null : <Marker position={position}></Marker>
     }
+
+    // const getUserLocation = () => {
+    //     if ('geolocation' in navigator) {
+    //         // Get the current position
+    //         navigator.geolocation.getCurrentPosition(
+    //             // Success callback
+    //             function (position) {
+    //                 // Get the latitude and longitude from the position object
+    //                 var latitude = position.coords.latitude
+    //                 var longitude = position.coords.longitude
+
+    //                 setUserLocation({
+    //                     lat: latitude.toString(),
+    //                     lng: longitude.toString(),
+    //                 })
+    //             },
+    //             // Error callback
+    //             function (error) {
+    //                 console.error(
+    //                     'Error Code = ' + error.code + ' - ' + error.message,
+    //                 )
+    //             },
+    //         )
+    //     } else {
+    //         console.error('Geolocation is not supported by this browser.')
+    //     }
+    // }
 
     const onSubmit = (
         formValue: FormModel,
@@ -143,8 +169,10 @@ const NewProjectForm = () => {
         formData.append('categories', JSON.stringify(newCategories))
         formData.append('workingTime', JSON.stringify(workingTime))
         formData.append('location[type]', 'Point')
-        formData.append('location[coordinates][]', userLocation?.lat)
-        formData.append('location[coordinates][]', userLocation?.lng)
+        // formData.append('location[coordinates][]', userLocation?.lat)
+        // formData.append('location[coordinates][]', userLocation?.lng)
+        formData.append('location[coordinates][]', position.lat)
+        formData.append('location[coordinates][]', position.lng)
         formData.append('address', address?.value)
         // formData.append('type', 'saloon')
         formData.append('logo', file)
@@ -182,7 +210,7 @@ const NewProjectForm = () => {
             })
             setCategories(updatedCategories)
         })
-        getUserLocation()
+        // getUserLocation()
     }, [])
 
     return (
@@ -376,6 +404,7 @@ const NewProjectForm = () => {
                                                             index
                                                         ].selected && (
                                                             <div>
+                                                                <span>يبدأ</span>
                                                                 <Field
                                                                     type="time"
                                                                     name={`workingTime.${index}.open`}
@@ -388,6 +417,7 @@ const NewProjectForm = () => {
                                                                         color: 'red',
                                                                     }}
                                                                 />
+                                                                <span className='ms-4'>ينتهي</span>
                                                                 <Field
                                                                     type="time"
                                                                     name={`workingTime.${index}.close`}
@@ -490,6 +520,24 @@ const NewProjectForm = () => {
                                     }}
                                 </Field>
                             </FormItem>
+                            <div>
+                            <p className="mb-2 font-semibold">موقع الصالون</p>
+                            <MapContainer
+                                center={[24.774265, 46.738586]}
+                                zoom={13}
+                                style={{
+                                    height: '50vh',
+                                    width: '100%',
+                                    marginBottom: '20px',
+                                }}
+                            >
+                                <TileLayer
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                />
+                                <LocationMarker />
+                            </MapContainer>
+                        </div>
                             <Button block variant="solid" type="submit">
                                 إرسال
                             </Button>

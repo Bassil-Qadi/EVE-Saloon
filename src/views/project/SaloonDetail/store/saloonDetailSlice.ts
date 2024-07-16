@@ -133,7 +133,6 @@ export const getSaloon = createAsyncThunk(
     }
 )
 
-
 export const addSaloonUser = createAsyncThunk(
     SLICE_NAME + '/addSaloonUser',
     async (data: any) => {
@@ -141,17 +140,6 @@ export const addSaloonUser = createAsyncThunk(
         return response.data
     }
 )
-
-// export const deleteCustomer = createAsyncThunk(
-//     SLICE_NAME + '/deleteCustomer',
-//     async (data: DeleteCrmCustomerRequest) => {
-//         const response = await apiDeleteCrmCustomer<
-//             DeleteCrmCustomerResponse,
-//             DeleteCrmCustomerRequest
-//         >(data)
-//         return response.data
-//     }
-// )
 
 export const putCustomer = createAsyncThunk(
     SLICE_NAME + '/putCustomer',

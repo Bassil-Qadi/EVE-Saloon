@@ -39,12 +39,12 @@ const StatisticCard = ({
                             prefix={valuePrefix}
                         />
                     </h3>
-                    <p>
+                    {/* <p>
                         vs. 3 months prior to{' '}
                         <span className="font-semibold">
                             {dayjs(date).format('DD MMM')}
                         </span>
-                    </p>
+                    </p> */}
                 </div>
                 <GrowShrinkTag value={data.length} suffix="%" />
             </div>
