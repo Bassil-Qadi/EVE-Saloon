@@ -128,6 +128,36 @@ const manageArticlesSlice = createSlice({
             .addCase(getPages.rejected, (state) => {
                 state.loading = false
             })
+            .addCase(addPage.fulfilled, (state, action) => {
+                state.loading = false
+                state.pages = action.payload
+            })
+            .addCase(addPage.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(addPage.rejected, (state) => {
+                state.loading = false
+            })
+            .addCase(updatePage.fulfilled, (state, action) => {
+                state.loading = false
+                state.pages = action.payload
+            })
+            .addCase(updatePage.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(updatePage.rejected, (state) => {
+                state.loading = false
+            })
+            .addCase(deletePage.fulfilled, (state, action) => {
+                state.loading = false
+                state.pages = action.payload
+            })
+            .addCase(deletePage.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(deletePage.rejected, (state) => {
+                state.loading = false
+            })
     },
 })
 
