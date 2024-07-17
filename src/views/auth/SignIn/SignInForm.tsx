@@ -109,7 +109,7 @@ const SignInForm = (props: SignInFormProps) => {
                                 <Field
                                     autoComplete="off"
                                     name="password"
-                                    placeholder="كلمة المرور"
+                                    placeholder="ادخل كلمة المرور"
                                     component={PasswordInput}
                                 />
                             </FormItem>
