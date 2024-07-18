@@ -80,8 +80,8 @@ const saudiArabiaStates = [
 ]
 
 const accountType = [
-    { label: 'صالون', value: 'saloon' },
-    { label: 'عيادة', value: 'clinic' },
+    { label: 'صالون', value: 'saloon', name: "صالون" },
+    { label: 'عيادة', value: 'clinic', name: "عيادة" },
 ]
 
 const validationSchema = Yup.object().shape({
@@ -177,7 +177,7 @@ const NewProjectForm = () => {
         // formData.append('type', 'saloon')
         formData.append('logo', file)
         formData.append('phone', phone)
-        formData.append('type', type.value)
+        formData.append('type', type)
 
         for (let i = 0; i < images.length; i++) {
             formData.append('images', images[i])
@@ -370,12 +370,15 @@ const NewProjectForm = () => {
                                                         accountType[0]
                                                     }
                                                     options={accountType}
-                                                    onChange={(options) =>
+                                                    onChange={(options) => {
+                                                        console.log(options?.value)
+                                                    
                                                         form.setFieldValue(
                                                             field.name,
-                                                            options,
+                                                            options?.value,
                                                         )
                                                     }
+                                                }
                                                 />
                                             )
                                         }}
