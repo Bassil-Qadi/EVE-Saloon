@@ -177,7 +177,7 @@ const NewProjectForm = () => {
         // formData.append('type', 'saloon')
         formData.append('logo', file)
         formData.append('phone', phone)
-        formData.append('type', type)
+        formData.append('type', type.value)
 
         for (let i = 0; i < images.length; i++) {
             formData.append('images', images[i])
