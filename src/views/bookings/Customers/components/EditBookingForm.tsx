@@ -55,7 +55,7 @@ const EditBookingForm = ({ setEditDialogOpen }: any) => {
         const { bookingTime, serviceIds } =
             formValue
 
-        let newServices = serviceIds.map((service: any) => service._id)
+        let newServices = serviceIds?.map((service: any) => service._id)
 
         let responseData = dispatch(putBooking({ bookingTime, serviceIds: newServices, saloonId: selectedSaloonId, userId: selectedBooking.userId, bookingId: selectedBooking._id }))
         responseData.then((data) => {
@@ -72,7 +72,7 @@ const EditBookingForm = ({ setEditDialogOpen }: any) => {
     }
 
     useEffect(() => {
-        const updatedServices = selectedBooking.serviceIds.map((service: any) => {
+        const updatedServices = selectedBooking?.serviceIds?.map((service: any) => {
             return {
                 ...service,
                 label: service.name,
