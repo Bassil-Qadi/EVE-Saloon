@@ -165,7 +165,6 @@ const NewProjectForm = () => {
                 address: {
                     value: '',
                 },
-                // workingTime: [],
                 images: [],
                 file: '',
                 workingTime: [

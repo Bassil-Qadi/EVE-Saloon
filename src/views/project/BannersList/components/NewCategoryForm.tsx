@@ -44,6 +44,7 @@ const NewCategoryForm = () => {
     const [services, setServices] = useState([])
     const [startDate, setStartDate] = useState()
     const [endDate, setEndDate] = useState()
+    const [totalPrice, setTotalPrice] = useState(0)
 
     const selectedSaloonId = useCrmSelector(
         (state) => state.crmCustomers.data.filterData.selectedSaloon,
@@ -88,7 +89,7 @@ const NewCategoryForm = () => {
         formData.append('image', image)
         formData.append('startDate', startDate)
         formData.append('endDate', endDate)
-        formData.append('price', price)
+        formData.append('price', totalPrice)
         formData.append('priceAfterDiscount', priceAfterDiscount)
         formData.append('serviceIds', JSON.stringify(newServices))
 
@@ -184,6 +185,28 @@ const NewCategoryForm = () => {
                                 }}
                             </Field>
                         </FormItem>
+                        <FormItem label="الخدمات">
+                            <Field name="serviceIds">
+                                {({ field, form }: FieldProps) => {
+                                    return (
+                                        <Select
+                                            isMulti
+                                            placeholder="اختر الخدمات"
+                                            options={services}
+                                            onChange={(options) => {
+                                                let sum = options?.reduce((acc, item) => acc + item.price, 0)
+                                                setTotalPrice(sum)
+                                                form.setFieldValue(
+                                                    field.name,
+                                                    options,
+                                                )
+                                            }
+                                            }
+                                        />
+                                    )
+                                }}
+                            </Field>
+                        </FormItem>
                         <FormItem
                             label="السعر"
                             invalid={errors.price && touched.price}
@@ -195,6 +218,8 @@ const NewCategoryForm = () => {
                                 name="price"
                                 placeholder="ادخل السعر "
                                 component={Input}
+                                value={totalPrice}
+                                disabled
                             />
                         </FormItem>
                         <FormItem
@@ -210,7 +235,7 @@ const NewCategoryForm = () => {
                                 component={Input}
                             />
                         </FormItem>
-                        <FormItem label="الخدمات">
+                        {/* <FormItem label="الخدمات">
                             <Field name="serviceIds">
                                 {({ field, form }: FieldProps) => {
                                     return (
@@ -228,7 +253,7 @@ const NewCategoryForm = () => {
                                     )
                                 }}
                             </Field>
-                        </FormItem>
+                        </FormItem> */}
                         <FormItem
                             invalid={errors.image && touched.image}
                             errorMessage={errors.image}

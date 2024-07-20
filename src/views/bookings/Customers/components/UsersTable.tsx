@@ -21,6 +21,11 @@ import dayjs from 'dayjs'
 import cloneDeep from 'lodash/cloneDeep'
 import type { OnSortParam, ColumnDef } from '@/components/shared/DataTable'
 
+const PAYMENT_METHODS: any = {
+    "credit_card": "بطاقة ائتمان",
+    "apple_pay": "أبل باي"
+}
+
 const ActionColumn = ({
     row,
     onDialogOpen,
@@ -123,7 +128,7 @@ const Customers = () => {
                     const row = props.row.original
                     return (
                         <div className="flex items-center">
-                            {dayjs(row?.bookingTime).format('DD/MM/YYYY h:m A')}
+                            {dayjs(row?.bookingTime)?.format('DD/MM/YYYY h:m A')}
                         </div>
                     )
                 },
@@ -143,7 +148,7 @@ const Customers = () => {
                     const row = props.row.original
                     return (
                         <div className="flex items-center">
-                            {row?.paymentMethod}
+                            {PAYMENT_METHODS[row?.paymentMethod]}
                         </div>
                     )
                 },

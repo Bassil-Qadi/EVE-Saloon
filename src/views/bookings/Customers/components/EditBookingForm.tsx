@@ -80,13 +80,13 @@ const EditBookingForm = ({ setEditDialogOpen }: any) => {
             }
         })
         setServices(updatedServices)
-    }, [])
+    }, [selectedBooking])
 
     return (
         <Formik
             initialValues={{
                 bookingTime: dayjs(selectedBooking.bookingTime).format('YYYY-MM-DD') || '',
-                serviceIds: selectedBooking.serviceIds || [],
+                serviceIds: selectedBooking.serviceIds || services,
             }}
             // validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
