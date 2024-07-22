@@ -21,7 +21,7 @@ type VerifyOtpFormSchema = {
 }
 
 const validationSchema = Yup.object().shape({
-    otp: Yup.string().required('الرجاء إدخال رمز التأكيد')
+    otp: Yup.string().required('الرجاء إدخال الكود المرسل إلى جوالك')
 })
 
 const VerifyOtpForm = (props: VerifyOtpFormProps) => {
@@ -82,7 +82,7 @@ const VerifyOtpForm = (props: VerifyOtpFormProps) => {
                                     type="text"
                                     autoComplete="off"
                                     name="otp"
-                                    placeholder="ادخل رمز التأكيد"
+                                    placeholder="الرجاء إدخال الكود المرسل إلى جوالك"
                                     component={Input}
                                 />
                             </FormItem>
