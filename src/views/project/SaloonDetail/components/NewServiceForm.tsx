@@ -51,7 +51,7 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
         response.then((data) => {
             const updatedSaloons = data.payload
                 .filter(
-                    (saloon: any) => currentUserRole === 'owner' ? saloon?.createdBy?.id === currentUserId : saloon?._id === currentUserSaloonId,
+                    (saloon: any) => currentUserRole === 'owner' ? saloon?.userId === currentUserId : saloon?._id === currentUserSaloonId,
                 )
                 .map((saloon: any) => {
                     return {
@@ -88,7 +88,7 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
 
         const { name, price, duration, saloon, saloonCategory, saloonStaff, maxService } = formValue
 
-        let response = dispatch(addService({ name, price, duration, saloonCategoryId: saloonCategory, userId: currentUserId, saloonId: saloon._id, staffId: saloonStaff, maxService }))
+        let response = dispatch(addService({ name, price, duration, saloonCategoryId: saloonCategory, userId: currentUserId, saloonId: saloon._id, maxService }))
         response.then(data => {
             if(data.payload.responseType === 'Success') {
                 fetchData()
@@ -215,7 +215,7 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
                                 }}
                             </Field>
                         </FormItem>
-                        <FormItem
+                        {/* <FormItem
                             label="قائمة العاملين"
                             invalid={errors.saloonStaff && touched.saloonStaff}
                             errorMessage={errors.saloonStaff}
@@ -238,7 +238,7 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
                                     )
                                 }}
                             </Field>
-                        </FormItem>
+                        </FormItem> */}
                         <Button block variant="solid" type="submit">
                             إضافة
                         </Button>

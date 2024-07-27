@@ -78,7 +78,7 @@ const CustomerTableFilter = () => {
         let response = dispatch(getSaloonsList())
         response.then((data: any) => {
             if(data.payload) {
-                let newSaloonsList = data?.payload?.filter((saloon: any) => currentUserRole === 'owner' ? saloon?.createdBy?.id === currentUserId : saloon?._id === currentUserSaloonId)?.map((saloon: any) => {
+                let newSaloonsList = data?.payload?.filter((saloon: any) => currentUserRole === 'owner' ? saloon?.userId === currentUserId : saloon?._id === currentUserSaloonId)?.map((saloon: any) => {
                     return {
                         ...saloon,
                         label: saloon.name,

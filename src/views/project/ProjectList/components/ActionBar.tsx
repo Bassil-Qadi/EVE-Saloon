@@ -5,14 +5,8 @@ import Tooltip from '@/components/ui/Tooltip'
 import {
     HiOutlinePlusCircle,
     HiOutlineSearch,
-    HiOutlineViewGrid,
-    HiOutlineViewList,
-    HiOutlineSortAscending,
-    HiOutlineSortDescending,
 } from 'react-icons/hi'
 import {
-    toggleView,
-    toggleSort,
     setSearch,
     toggleNewProjectDialog,
     useAppDispatch,
@@ -26,17 +20,13 @@ const ActionBar = () => {
 
     const inputRef = useRef(null)
 
-    const view = useAppSelector((state) => state.projectList.data.view)
+    const saloonsList = useAppSelector(
+        state => state.projectList.data.saloonsList
+    )
 
-    const { sort } = useAppSelector((state) => state.projectList.data.query)
-
-    const onViewToggle = () => {
-        dispatch(toggleView(view === 'grid' ? 'list' : 'grid'))
-    }
-
-    const onToggleSort = () => {
-        dispatch(toggleSort(sort === 'asc' ? 'desc' : 'asc'))
-    }
+    const currentUserRole = useAppSelector(
+        state => state.auth.user.role
+    )
 
     const onAddNewProject = () => {
         dispatch(toggleNewProjectDialog(true))
@@ -63,44 +53,27 @@ const ActionBar = () => {
                     prefix={<HiOutlineSearch className="text-lg" />}
                     onChange={handleInputChange}
                 />
-                {/* <Tooltip title={view === 'grid' ? 'List view' : 'Grid view'}>
+                
+                {saloonsList?.length > 0 && currentUserRole === 'owner' && <Tooltip title={'لا يمكنك إضافة أكثر من صالون'}>
                     <Button
-                        className="hidden md:flex"
-                        variant="plain"
-                        size="sm"
-                        icon={
-                            view === 'grid' ? (
-                                <HiOutlineViewList />
-                            ) : (
-                                <HiOutlineViewGrid />
-                            )
-                        }
-                        onClick={() => onViewToggle()}
-                    />
-                </Tooltip>
-                <Tooltip title={`Sort: ${sort === 'asc' ? 'A-Z' : 'Z-A'}`}>
-                    <Button
-                        className="hidden md:flex"
-                        variant="plain"
-                        size="sm"
-                        icon={
-                            sort === 'asc' ? (
-                                <HiOutlineSortAscending />
-                            ) : (
-                                <HiOutlineSortDescending />
-                            )
-                        }
-                        onClick={onToggleSort}
-                    />
-                </Tooltip> */}
-                <Button
+                    size="sm"
+                    variant="twoTone"
+                    icon={<HiOutlinePlusCircle />}
+                    disabled={saloonsList?.length > 0}
+                    onClick={onAddNewProject}
+                >
+                    إضافة صالون جديد
+                </Button>
+                    </Tooltip> }
+                
+                {saloonsList?.length === 0 && currentUserRole === 'owner' && <Button
                     size="sm"
                     variant="twoTone"
                     icon={<HiOutlinePlusCircle />}
                     onClick={onAddNewProject}
                 >
                     إضافة صالون جديد
-                </Button>
+                </Button>}
             </div>
         </div>
     )

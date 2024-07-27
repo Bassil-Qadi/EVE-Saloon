@@ -68,7 +68,7 @@ const GridItem = ({ data }: GridItemProps) => {
                         onClick={() => navigate(`/app/project/saloon-details?id=${_id}`)}
                     />
                 </div>
-                <p className="mt-4"><strong>المالك:</strong> {createdBy?.name}</p>
+                {/* <p className="mt-4"><strong>المالك:</strong> {createdBy?.name}</p> */}
                 <div className="mt-3">
                     <div className="flex items-center justify-between mt-2">
                         <Members members={categories} />
