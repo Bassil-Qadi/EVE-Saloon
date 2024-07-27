@@ -82,6 +82,31 @@ const validationSchema = Yup.object().shape({
     description: Yup.string().required('الرجاء إدخال التفاصيل'),
 })
 
+const LocateControl = ({ onLocationFound }: any) => {
+    const map = useMapEvents({
+        locationfound(e) {
+          onLocationFound(e);
+        },
+      });
+
+    useEffect(() => {
+        const lc = L.control
+            .locate({
+                position: 'topright',
+                strings: {
+                    title: 'Show me where I am',
+                },
+                flyTo: true,
+            })
+            .addTo(map)
+        return () => {
+            lc.remove()
+        }
+    }, [map])
+
+    return null
+}
+
 const NewProjectForm = () => {
     const dispatch = useAppDispatch()
 
@@ -90,18 +115,9 @@ const NewProjectForm = () => {
     const [categories, setCategories] = useState([])
     const [position, setPosition] = useState(null)
 
-    const LocationMarker = () => {
-        useMapEvents({
-            click(e) {
-                const { lat, lng } = e.latlng
-                setPosition(e.latlng)
-                // setLocation({ lat, lng });
-            },
-        })
-
-        return position === null ? null : <Marker position={position}></Marker>
-    }
-
+    const handleLocationFound = (e: any) => {
+        setPosition(e.latlng);
+      };
 
     const onSubmit = (
         formValue: FormModel,
@@ -622,7 +638,7 @@ const NewProjectForm = () => {
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             />
-                            <LocationMarker />
+                            <LocateControl onLocationFound={handleLocationFound} />
                         </MapContainer>
                         </div>
                         <Button block variant="solid" type="submit">

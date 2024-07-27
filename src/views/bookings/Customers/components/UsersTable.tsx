@@ -20,6 +20,7 @@ import toast from '@/components/ui/toast'
 import dayjs from 'dayjs'
 import cloneDeep from 'lodash/cloneDeep'
 import type { OnSortParam, ColumnDef } from '@/components/shared/DataTable'
+import moment from 'moment'
 
 const PAYMENT_METHODS: any = {
     "credit_card": "بطاقة ائتمان",
@@ -128,7 +129,8 @@ const Customers = () => {
                     const row = props.row.original
                     return (
                         <div className="flex items-center">
-                            {dayjs(row?.bookingTime)?.format('DD/MM/YYYY h:m A')}
+                            {/* {dayjs()?.format('DD/MM/YYYY h:m A')} */}
+                            {moment(row?.bookingTime).format('MMMM Do YYYY, h:mm a')}
                         </div>
                     )
                 },

@@ -130,7 +130,7 @@ const manageArticlesSlice = createSlice({
             })
             .addCase(addPage.fulfilled, (state, action) => {
                 state.loading = false
-                state.pages = action.payload
+                // state.pages = action.payload.data
             })
             .addCase(addPage.pending, (state) => {
                 state.loading = true
@@ -140,7 +140,7 @@ const manageArticlesSlice = createSlice({
             })
             .addCase(updatePage.fulfilled, (state, action) => {
                 state.loading = false
-                state.pages = action.payload
+                // state.pages = action.payload
             })
             .addCase(updatePage.pending, (state) => {
                 state.loading = true

@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
-import Tooltip from '@/components/ui/Tooltip'
 import {
     HiOutlinePlusCircle,
     HiOutlineSearch,
@@ -10,14 +9,14 @@ import {
     setSearch,
     toggleNewProjectDialog,
     useAppDispatch,
-    useAppSelector,
+    useAppSelector
 } from '../store'
 import debounce from 'lodash/debounce'
 import type { ChangeEvent } from 'react'
+import Tooltip from '@/components/ui/Tooltip'
 
 const ActionBar = () => {
     const dispatch = useAppDispatch()
-
     const inputRef = useRef(null)
 
     const saloonsList = useAppSelector(

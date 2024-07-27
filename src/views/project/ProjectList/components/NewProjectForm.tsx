@@ -26,11 +26,18 @@ import {
 import { getAllCategoryList } from '../../CategoryList/store'
 
 import * as Yup from 'yup'
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
+import {
+    MapContainer,
+    TileLayer,
+    Marker,
+    useMapEvents,
+    useMap,
+} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerIconShadow from 'leaflet/dist/images/marker-shadow.png'
+import 'leaflet.locatecontrol'
 
 let DefaultIcon = L.icon({
     iconUrl: markerIcon,
@@ -84,6 +91,31 @@ const validationSchema = Yup.object().shape({
     description: Yup.string().required('الرجاء إدخال التفاصيل'),
 })
 
+const LocateControl = ({ onLocationFound }: any) => {
+    const map = useMapEvents({
+        locationfound(e) {
+          onLocationFound(e);
+        },
+      });
+
+    useEffect(() => {
+        const lc = L.control
+            .locate({
+                position: 'topright',
+                strings: {
+                    title: 'Show me where I am',
+                },
+                flyTo: true,
+            })
+            .addTo(map)
+        return () => {
+            lc.remove()
+        }
+    }, [map])
+
+    return null
+}
+
 const NewProjectForm = () => {
     const dispatch = useAppDispatch()
 
@@ -92,17 +124,9 @@ const NewProjectForm = () => {
     const [categories, setCategories] = useState([])
     const [position, setPosition] = useState(null)
 
-    const LocationMarker = () => {
-        useMapEvents({
-            click(e) {
-                const { lat, lng } = e.latlng
-                setPosition(e.latlng)
-                // setLocation({ lat, lng });
-            },
-        })
-
-        return position === null ? null : <Marker position={position}></Marker>
-    }
+    const handleLocationFound = (e: any) => {
+        setPosition(e.latlng);
+      };
 
     const onSubmit = (
         formValue: FormModel,
@@ -648,9 +672,9 @@ const NewProjectForm = () => {
                             >
                                 <TileLayer
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                                 />
-                                <LocationMarker />
+                                <LocateControl onLocationFound={handleLocationFound} />
                             </MapContainer>
                         </div>
                         <Button block variant="solid" type="submit">

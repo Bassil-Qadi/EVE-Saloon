@@ -69,7 +69,7 @@ const EditCustomerProfile = ({ fetchData }: any) => {
             phone
         } = values
 
-        let newCategories = categories.map((category) => category._id)
+        let newCategories = categories.map((category) => category.id)
 
         let formData = new FormData()
 
