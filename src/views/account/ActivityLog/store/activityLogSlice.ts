@@ -204,6 +204,9 @@ const activityLogSlice = createSlice({
                 state.loading = false
                 state.notificationsList = action.payload
             })
+            .addCase(getNotifications.rejected, (state) => {
+                state.loading = false
+            })
             // .addCase(addNotification.pending, (state) => {
             //     state.loading = true
             // })

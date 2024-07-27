@@ -130,7 +130,8 @@ const BookingsTable = () => {
                     const row = props.row.original
                     return (
                         <div className="flex items-center">
-                            {dayjs(row?.bookingTime).format('DD/MM/YYYY h:m A')}
+                            {/* {dayjs().format('DD/MM/YYYY h:m A')} */}
+                            {row?.bookingTime}
                         </div>
                     )
                 },

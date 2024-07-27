@@ -26,6 +26,11 @@ const CustomersTableTools = () => {
         (state) => state.crmCustomers.data.tableData
     )
 
+    const selectedSaloon = useAppSelector(
+        (state) => state.crmCustomers.data.filterData.selectedSaloon
+    )
+
+
     // useEffect(() => {
     //     fetchSaloons()
     // }, [])
@@ -88,15 +93,16 @@ const CustomersTableTools = () => {
                     icon={<HiOutlinePlusCircle />}
                     onClick={onCreateUser}
                     className="mb-4"
+                    disabled={!selectedSaloon}
                 >
                     إضافة موظف جديد
                 </Button>
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
                 <Button size="sm" onClick={onClearAll}>
                     مسح الكل
                 </Button>
-            </div>
+            </div> */}
         </div>
     )
 }

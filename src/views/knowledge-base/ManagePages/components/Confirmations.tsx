@@ -97,13 +97,14 @@ const Confirmations = ({ data, selectedSaloonId }: { data: Page[], selectedSaloo
             formData.append('image', workImage)
             formData.append('saloonId', selectedSaloonId)
             formData.append('createdBy', currentUserId)
-            // formData.append('id', selected._id)
+           
             let returndedData = dispatch(
-                addPage(formData),
+                addPage(formData)
             )
 
             returndedData.then((data) => {
                 if (data.payload.statusCode === 201) {
+                    console.log(data.payload.data)
                     const newData = [...allPages, data.payload.data]
                     dispatch(setPages(newData))
                 }
