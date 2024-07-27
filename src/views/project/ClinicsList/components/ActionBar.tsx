@@ -61,7 +61,7 @@ const ActionBar = () => {
                     disabled={saloonsList?.length > 0}
                     onClick={onAddNewProject}
                 >
-                    إضافة صالون جديد
+                    إضافة عيادة جديدة
                 </Button>
                     </Tooltip> }
                 

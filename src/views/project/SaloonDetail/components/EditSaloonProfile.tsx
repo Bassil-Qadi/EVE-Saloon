@@ -5,18 +5,13 @@ import Notification from '@/components/ui/Notification'
 import toast from '@/components/ui/toast'
 import {
     closeEditSaloonDetailDialog,
-    updateProfileData,
-    putCustomer,
     useAppDispatch,
     useAppSelector,
-    Customer,
     putSaloon,
-    Saloon
 } from '../store'
 // import CustomerForm, { FormikRef, FormModel } from '@/views/crm/CustomerForm'
 import SaloonForm, { FormikRef, FormModel } from '../SaloonForm/SaloonForm'
 import cloneDeep from 'lodash/cloneDeep'
-import dayjs from 'dayjs'
 
 type DrawerFooterProps = {
     onSaveClick?: () => void
@@ -69,9 +64,9 @@ const EditCustomerProfile = ({ fetchData }: any) => {
             phone
         } = values
 
-        let newCategories = categories.map((category) => category.id)
+        const newCategories = categories.map((category) => category.id)
 
-        let formData = new FormData()
+        const formData = new FormData()
 
         formData.append("name", name)
         formData.append("_id", saloon._id)
@@ -92,7 +87,7 @@ const EditCustomerProfile = ({ fetchData }: any) => {
             formData.append("images", clonedData.images[i])
         }
 
-        let response = dispatch(putSaloon(formData))
+        const response = dispatch(putSaloon(formData))
         response.then(data => {
             if(data.payload.responseType === 'Success') {
                 toast.push(

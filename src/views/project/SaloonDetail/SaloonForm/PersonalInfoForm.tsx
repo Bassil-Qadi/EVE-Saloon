@@ -88,6 +88,7 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
             >
                 <Field name="logo">
                     {({ field, form }: FieldProps) => {
+                        console.log(field)
                         const avatarProps = field.value
                             ? { src: field.value }
                             : {}
@@ -99,7 +100,6 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
                                     uploadLimit={1}
                                     onChange={(files) =>
                                         {
-                                            console.log(files[0])
                                             form.setFieldValue(
                                             field.name,
                                             files[0]
@@ -108,13 +108,6 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
                                     }
 
                                 >
-                                    {/* <Avatar
-                                        className="border-2 border-white dark:border-gray-800 shadow-lg"
-                                        size={100}
-                                        shape="circle"
-                                        icon={<HiOutlineUser />}
-                                        {...avatarProps}
-                                    /> */}
                                     <img 
                                         {...avatarProps} 
                                         className="border-2 border-white dark:border-gray-800 shadow-lg"
