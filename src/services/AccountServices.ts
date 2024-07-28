@@ -54,7 +54,7 @@ export async function apiGetNotificationsList<
     T
 >() {
     return ApiService.fetchData<T>({
-        url: '/admin/notifications',
+        url: '/notifications',
         method: 'get',
     })
 }

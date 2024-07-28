@@ -40,7 +40,7 @@ dayjs.extend(customParseFormat)
 const validationSchema = Yup.object().shape({
     // email: Yup.string().email('Invalid email').required('Email Required'),
     name: Yup.string().required('User Name Required'),
-    logo: Yup.string(),
+    // logo: Yup.string(),
     address: Yup.string()
     // phone: Yup.string().matches(
     //     /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/,

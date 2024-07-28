@@ -62,7 +62,7 @@ const EditCustomerProfile = ({ fetchData }: any) => {
             address,
             categories,
             phone,
-            logo
+            // logo
         } = values
 
         const newCategories = categories.map((category) => category.id)
@@ -82,7 +82,7 @@ const EditCustomerProfile = ({ fetchData }: any) => {
         formData.append("location[coordinates][]", "39.19057020516831");
         formData.append("location[coordinates][]", "21.53677989904675");
         formData.append('type', saloon.type)
-        formData.append('logo', logo)
+        // formData.append('logo', logo)
 
         for(let i = 0; i < clonedData.images.length; i++) {
             formData.append("images", clonedData.images[i])

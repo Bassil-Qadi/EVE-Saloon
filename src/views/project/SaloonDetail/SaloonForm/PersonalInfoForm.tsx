@@ -65,7 +65,7 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
         state => state.projectSaloonDetails.data.profileData.saloon._id
     )
     const [categories, setCategories] = useState([])
-    const [isImageChanged, setIsImageChanged] = useState(false)
+    // const [isImageChanged, setIsImageChanged] = useState(false)
 
     useEffect(() => {
         let responseData = dispatch(getCategoryList({ saloonId: selectedSaloon }))
@@ -83,7 +83,7 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
 
     return (
         <>
-            <FormItem
+            {/* <FormItem
                 invalid={errors.logo && touched.logo}
                 errorMessage={errors.logo}
             >
@@ -119,7 +119,7 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
                         )
                     }}
                 </Field>
-            </FormItem>
+            </FormItem> */}
             <FormItem
                 label="الاسم"
                 invalid={errors.name && touched.name}

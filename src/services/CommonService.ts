@@ -24,7 +24,7 @@ export async function apiGetNotificationList() {
             readed: boolean
         }[]
     >({
-        url: '/admin/notifications',
+        url: '/notifications',
         method: 'get',
     })
 }
