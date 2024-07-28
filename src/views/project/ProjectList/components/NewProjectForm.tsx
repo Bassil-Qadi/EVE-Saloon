@@ -435,6 +435,7 @@ const NewProjectForm = () => {
                                         <div>
                                             <Upload
                                                 draggable
+                                                multiple
                                                 onChange={(files) => {
                                                     form.setFieldValue(
                                                         field.name,

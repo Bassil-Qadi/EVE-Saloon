@@ -2,6 +2,7 @@ import { useEffect, useCallback, useMemo, useState } from 'react'
 import Tag from '@/components/ui/Tag'
 import DataTable from '@/components/shared/DataTable'
 import Dialog from '@/components/ui/Dialog'
+import Button from '@/components/ui/Button'
 import {
     getBookings,
     getBookingById,
@@ -21,20 +22,23 @@ import dayjs from 'dayjs'
 import cloneDeep from 'lodash/cloneDeep'
 import type { OnSortParam, ColumnDef } from '@/components/shared/DataTable'
 import moment from 'moment'
+import { HiEye } from 'react-icons/hi'
 
 const PAYMENT_METHODS: any = {
-    "credit_card": "بطاقة ائتمان",
-    "apple_pay": "أبل باي"
+    credit_card: 'بطاقة ائتمان',
+    apple_pay: 'أبل باي',
 }
 
 const ActionColumn = ({
     row,
     onDialogOpen,
-    onEditDialogOpen
+    onEditDialogOpen,
+    onBookingDialogOpen,
 }: {
     row: any
     onDialogOpen: (id: string) => void
     onEditDialogOpen: (id: string) => void
+    onBookingDialogOpen: () => void
 }) => {
     const { textTheme } = useThemeClass()
     const dispatch = useAppDispatch()
@@ -44,24 +48,40 @@ const ActionColumn = ({
         dispatch(setSelectedCustomer(row))
     }
 
+    const onOpenBooking = () => {
+        onBookingDialogOpen()
+        dispatch(setSelectedCustomer(row))
+    }
+
     return (
         <>
-        {row.status === 'pending' ? <div className="flex justify-center align-center gap-4">
-            <div
-                className={`${textTheme} cursor-pointer select-none font-semibold`}
-                onClick={onEdit}
-            >
-                تعديل
-            </div>
-            <div
-                className={`text-red-600 cursor-pointer select-none font-semibold`}
-                onClick={() => onDialogOpen(row._id || '')}
-            >
-                حذف
-            </div>
-        </div>
-        : <span>لا يمكن التعديل على حجز ملغي</span>
-        }
+            {row.status === 'pending' ? (
+                <div className="flex justify-center align-center gap-4">
+                    <div
+                        className={`${textTheme} cursor-pointer select-none font-semibold`}
+                        onClick={onEdit}
+                    >
+                        تعديل
+                    </div>
+                    <div
+                        className={`text-red-600 cursor-pointer select-none font-semibold`}
+                        onClick={() => onDialogOpen(row._id || '')}
+                    >
+                        حذف
+                    </div>
+                    <div className="flex justify-center align-center">
+                        <Button
+                            shape="circle"
+                            variant="plain"
+                            size="xs"
+                            icon={<HiEye />}
+                            onClick={() => onOpenBooking()}
+                        />
+                    </div>
+                </div>
+            ) : (
+                <span>لا يمكن التعديل على حجز ملغي</span>
+            )}
         </>
     )
 }
@@ -77,6 +97,9 @@ const Customers = () => {
     const selectedBooking = useAppSelector(
         (state) => state.bookings.data.selectedBooking,
     )
+    const selectedBookingDetails = useAppSelector(
+        (state) => state.bookings.data.selectedCustomer,
+    )
     const loading = useAppSelector((state) => state.bookings.data.loading)
     const filterData = useAppSelector((state) => state.bookings.data.filterData)
 
@@ -86,9 +109,14 @@ const Customers = () => {
 
     const [dialogOpen, setDialogOpen] = useState(false)
     const [editDialogOpen, setEditDialogOpen] = useState(false)
+    const [bookingdetailsDialog, setBookingDetailsDialog] = useState(false)
 
     const onDialogClose = () => {
         setDialogOpen(false)
+    }
+
+    const onBookingDialogClose = () => {
+        setBookingDetailsDialog(false)
     }
 
     const onEditDialogClose = () => {
@@ -99,6 +127,8 @@ const Customers = () => {
         dispatch(getBookingById(id))
         setEditDialogOpen(true)
     }
+
+    const onBookingDialogOpen = () => setBookingDetailsDialog(true)
 
     const onDialogOpen = (id: string) => {
         dispatch(getBookingById(id))
@@ -123,6 +153,30 @@ const Customers = () => {
     const columns: ColumnDef<any>[] = useMemo(
         () => [
             {
+                header: 'اسم العميل',
+                accessorKey: 'userId.name',
+                cell: (props) => {
+                    const row = props.row.original
+                    return (
+                        <div className="flex items-center">
+                            {row?.userId?.name}
+                        </div>
+                    )
+                },
+            },
+            {
+                header: 'رقم الجوال',
+                accessorKey: 'userId.phone',
+                cell: (props) => {
+                    const row = props.row.original
+                    return (
+                        <div className="flex items-center">
+                            {row?.userId?.phone}
+                        </div>
+                    )
+                },
+            },
+            {
                 header: 'وقت الحجز',
                 accessorKey: 'bookingTime',
                 cell: (props) => {
@@ -130,31 +184,33 @@ const Customers = () => {
                     return (
                         <div className="flex items-center">
                             {/* {dayjs()?.format('DD/MM/YYYY h:m A')} */}
-                            {moment(row?.bookingTime).format('MMMM Do YYYY, h:mm a')}
+                            {moment(row?.bookingTime).format(
+                                'MMMM Do YYYY, h:mm a',
+                            )}
                         </div>
                     )
                 },
             },
-            {
-                header: 'السعر',
-                accessorKey: 'total',
-                cell: (props) => {
-                    const row = props.row.original
-                    return <div className="flex items-center">{row?.total}</div>
-                },
-            },
-            {
-                header: 'طريقة الدفع',
-                accessorKey: 'paymentMethod',
-                cell: (props) => {
-                    const row = props.row.original
-                    return (
-                        <div className="flex items-center">
-                            {PAYMENT_METHODS[row?.paymentMethod]}
-                        </div>
-                    )
-                },
-            },
+            // {
+            //     header: 'المبلغ',
+            //     accessorKey: 'total',
+            //     cell: (props) => {
+            //         const row = props.row.original
+            //         return <div className="flex items-center">{row?.total}</div>
+            //     },
+            // },
+            // {
+            //     header: 'طريقة الدفع',
+            //     accessorKey: 'paymentMethod',
+            //     cell: (props) => {
+            //         const row = props.row.original
+            //         return (
+            //             <div className="flex items-center">
+            //                 {PAYMENT_METHODS[row?.paymentMethod]}
+            //             </div>
+            //         )
+            //     },
+            // },
             {
                 header: 'الحالة',
                 accessorKey: 'status',
@@ -167,20 +223,20 @@ const Customers = () => {
                     )
                 },
             },
-            {
-                header: 'الخدمات المقدمة',
-                accessorKey: 'serviceIds',
-                cell: (props) => {
-                    const row = props.row.original
-                    return (
-                        <div className="flex items-center">
-                            {row?.serviceIds?.map((service: any) => (
-                                <Tag key={service?.id}>{service?.name}</Tag>
-                            ))}
-                        </div>
-                    )
-                },
-            },
+            // {
+            //     header: 'الخدمات المقدمة',
+            //     accessorKey: 'serviceIds',
+            //     cell: (props) => {
+            //         const row = props.row.original
+            //         return (
+            //             <div className="flex items-center">
+            //                 {row?.serviceIds?.map((service: any) => (
+            //                     <Tag key={service?.id}>{service?.name}</Tag>
+            //                 ))}
+            //             </div>
+            //         )
+            //     },
+            // },
             {
                 header: 'تاريخ الإنشاء',
                 accessorKey: 'createdAt',
@@ -188,23 +244,23 @@ const Customers = () => {
                     const row = props.row.original
                     return (
                         <div className="flex items-center">
-                            {dayjs(row.createdAt).format('MM/DD/YYYY')}
+                            {dayjs(row?.createdAt).format('MM/DD/YYYY')}
                         </div>
                     )
                 },
             },
-            {
-                header: 'آخر تحديث',
-                accessorKey: 'updatedAt',
-                cell: (props) => {
-                    const row = props.row.original
-                    return (
-                        <div className="flex items-center">
-                            {dayjs(row.createdAt).format('MM/DD/YYYY')}
-                        </div>
-                    )
-                },
-            },
+            // {
+            //     header: 'آخر تحديث',
+            //     accessorKey: 'updatedAt',
+            //     cell: (props) => {
+            //         const row = props.row.original
+            //         return (
+            //             <div className="flex items-center">
+            //                 {dayjs(row?.createdAt).format('MM/DD/YYYY')}
+            //             </div>
+            //         )
+            //     },
+            // },
             {
                 header: 'المزيد',
                 id: 'action',
@@ -212,6 +268,7 @@ const Customers = () => {
                     <ActionColumn
                         row={props.row.original}
                         onDialogOpen={onDialogOpen}
+                        onBookingDialogOpen={onBookingDialogOpen}
                         onEditDialogOpen={onEditDialogOpen}
                     />
                 ),
@@ -278,15 +335,44 @@ const Customers = () => {
                 onSort={onSort}
             />
             <Dialog
-            isOpen={editDialogOpen}
-            onClose={onEditDialogClose}
-            onRequestClose={onEditDialogClose}
-        >
-            <h4>تعديل تفاصيل الحجز</h4>
-            <div className="max-h-96 overflow-y-auto mt-4 px-4">
-                <EditBookingForm setEditDialogOpen={setEditDialogOpen} />
-            </div>
-        </Dialog>
+                isOpen={editDialogOpen}
+                onClose={onEditDialogClose}
+                onRequestClose={onEditDialogClose}
+            >
+                <h4>تعديل تفاصيل الحجز</h4>
+                <div className="max-h-96 overflow-y-auto mt-4 px-4">
+                    <EditBookingForm setEditDialogOpen={setEditDialogOpen} />
+                </div>
+            </Dialog>
+            <Dialog
+                isOpen={bookingdetailsDialog}
+                onClose={onBookingDialogClose}
+                onRequestClose={onBookingDialogClose}
+            >
+                <h4>تفاصيل الحجز</h4>
+                <div className='flex items-start justify-center flex-col py-5'>
+                    <div className='w-full flex items-start justify-center flex-col mt-5'>
+                        <span>المعلومات الشخصية</span>
+                        <div className='w-full rounded-md border-2 border-slate-200 flex flex-col mt-3 p-4'>
+                            <span>الاسم: {selectedBookingDetails?.userId?.name}</span>
+                            <span>رقم الجوال: {selectedBookingDetails?.userId?.phone}</span>
+                        </div>
+                    </div>
+                    <div className='w-full flex items-start justify-center flex-col mt-5'>
+                        <span>معلومات الحجز</span>
+                        <div className='w-full rounded-md border-2 border-slate-200 flex flex-col mt-3 p-4'>
+                            <span>الموعد: {moment(selectedBookingDetails?.bookingTime).format('MMMM Do YYYY, h:mm a')}</span>
+                            <span>طريقة الدفع: {PAYMENT_METHODS[selectedBookingDetails?.paymentMethod]}</span>
+                            <span>المبلغ: {selectedBookingDetails?.total}</span>
+                            <span>الحالة: <Tag>{selectedBookingDetails?.status}</Tag></span>
+                            <span>الخدمات المقدمة: {selectedBookingDetails?.serviceIds?.map((service: any) => (
+                                <Tag key={service?.id}>{service?.name}</Tag>
+                            ))}</span>
+                            <span>تاريخ الإنشاء: {dayjs(selectedBookingDetails?.createdAt).format('MM/DD/YYYY')}</span>
+                        </div>
+                    </div>
+                </div>
+            </Dialog>
             <ConfirmDialog
                 isOpen={dialogOpen}
                 type="danger"

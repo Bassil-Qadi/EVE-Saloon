@@ -19,8 +19,12 @@ const ActionBar = () => {
     const dispatch = useAppDispatch()
     const inputRef = useRef(null)
 
+    const currentUserId = useAppSelector(
+        state => state.auth.user.id
+    )
+
     const saloonsList = useAppSelector(
-        state => state.projectList.data.saloonsList
+        state => state.projectList.data.saloonsList?.filter((saloon: any) => saloon.userId === currentUserId && saloon.type === 'saloon')
     )
 
     const currentUserRole = useAppSelector(

@@ -64,8 +64,6 @@ const CustomerTableFilter = ({ saloonsList }: any) => {
 
     // const [saloonsList, setSaloonsList] = useState([])
 
-    console.log(saloonsList)
-
     const { selectedSaloon } = useAppSelector(
         (state) => state?.bookings?.data?.filterData
     )

@@ -65,6 +65,7 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
         state => state.projectSaloonDetails.data.profileData.saloon._id
     )
     const [categories, setCategories] = useState([])
+    const [isImageChanged, setIsImageChanged] = useState(false)
 
     useEffect(() => {
         let responseData = dispatch(getCategoryList({ saloonId: selectedSaloon }))
@@ -88,9 +89,9 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
             >
                 <Field name="logo">
                     {({ field, form }: FieldProps) => {
-                        console.log(field)
-                        const avatarProps = field.value
+                        const avatarProps = field.value && !isImageChanged
                             ? { src: field.value }
+                            : field.value && isImageChanged ? {src: URL.createObjectURL(field.value)}
                             : {}
                         return (
                             <div className="flex justify-center">
@@ -100,6 +101,7 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
                                     uploadLimit={1}
                                     onChange={(files) =>
                                         {
+                                            setIsImageChanged(true)
                                             form.setFieldValue(
                                             field.name,
                                             files[0]

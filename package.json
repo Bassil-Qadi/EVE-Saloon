@@ -27,6 +27,7 @@
     "@tanstack/react-table": "^8.8.5",
     "@types/geojson": "^7946.0.14",
     "@types/leaflet": "^1.9.12",
+    "@types/leaflet.locatecontrol": "^0.74.5",
     "@visx/pattern": "^3.0.0",
     "apexcharts": "^3.37.3",
     "axios": "^1.3.4",

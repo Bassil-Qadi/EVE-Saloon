@@ -82,7 +82,7 @@ const VerifyOtpForm = (props: VerifyOtpFormProps) => {
                                     type="text"
                                     autoComplete="off"
                                     name="otp"
-                                    placeholder="الرجاء إدخال الكود المرسل إلى جوالك"
+                                    placeholder="ادخل الرمز"
                                     component={Input}
                                 />
                             </FormItem>

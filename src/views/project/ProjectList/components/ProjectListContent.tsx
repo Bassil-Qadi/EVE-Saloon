@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import classNames from 'classnames'
 import GridItem from './GridItem'
-import ListItem from './ListItem'
 import Spinner from '@/components/ui/Spinner'
 import { getList, getSaloonsList, useAppDispatch, useAppSelector } from '../store'
 
@@ -15,7 +14,7 @@ const ProjectListContent = () => {
     )
 
     const ownerSaloonsList = useAppSelector(
-        (state) => state.projectList.data.saloonsList.filter(saloon => saloon.type === 'saloon' && saloon.userId === id)
+        (state) => state.projectList.data.saloonsList.filter((saloon: any) => saloon.type === 'saloon' && saloon.userId === id)
     )
 
     const userSaloonsList = useAppSelector(
@@ -26,6 +25,7 @@ const ProjectListContent = () => {
     const { sort, search } = useAppSelector(
         (state) => state.projectList.data.query
     )
+
 
     useEffect(() => {
         dispatch(getList({ sort, search }))
@@ -58,12 +58,6 @@ const ProjectListContent = () => {
                     ))}
                 </div>
             )}
-            {/* {view === 'list' &&
-                filteredSaloonsList.length > 0 &&
-                !loading &&
-                filteredSaloonsList?.filter(saloon => saloon.name.toLocaleLowerCase()?.startsWith(search))?.map((saloon) => (
-                    <ListItem key={saloon._id} data={saloon} />
-                ))} */}
         </div>
     )
 }

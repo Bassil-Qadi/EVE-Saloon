@@ -19,7 +19,7 @@ const ProjectListContent = () => {
     // )
 
     const ownerClinicsList = useAppSelector(
-        (state) => state.projectList.data.saloonsList.filter(saloon => saloon.type === 'clinic' && saloon?.userId === id)
+        (state) => state.projectList.data.saloonsList.filter((saloon: any) => saloon.type === 'clinic' && saloon?.userId === id)
     )
 
     const userClinicsList = useAppSelector(
