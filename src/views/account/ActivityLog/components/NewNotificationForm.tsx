@@ -113,7 +113,7 @@ const NewNotificationForm = () => {
             initialValues={{
                 title: '',
                 message: '',
-                saloon: '',
+                // saloon: '',
             }}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -150,7 +150,7 @@ const NewNotificationForm = () => {
                                 component={Input}
                             />
                         </FormItem>
-                        <FormItem label="قائمة الصالونات">
+                        {/* <FormItem label="قائمة الصالونات">
                             <Field name="saloon">
                                 {({ field, form }: FieldProps) => {
                                     return (
@@ -171,7 +171,7 @@ const NewNotificationForm = () => {
                                     )
                                 }}
                             </Field>
-                        </FormItem>
+                        </FormItem> */}
                         <div className="mb-4">
                             <Radio.Group
                                 vertical
@@ -181,12 +181,12 @@ const NewNotificationForm = () => {
                                 <Radio value={'all_users_notification'}>
                                     إرسال لجميع المستخدمين
                                 </Radio>
-                                <Radio value={'saloon_admin_notification'}>
+                                {/* <Radio value={'saloon_admin_notification'}>
                                     إرسال لصالون واحد فقط
                                 </Radio>
                                 <Radio value={'user_notification'}>
                                     إرسال لجميع الصالونات
-                                </Radio>
+                                </Radio> */}
                             </Radio.Group>
                         </div>
                         <Button block variant="solid" type="submit">
