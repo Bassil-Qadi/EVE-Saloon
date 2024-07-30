@@ -126,8 +126,8 @@ function useAuth() {
                 }
                 const redirectUrl = query.get(REDIRECT_URL_KEY)
                 navigate(
-                    // redirectUrl ? redirectUrl : appConfig.newSaloonRegistration
-                    appConfig.newSaloonRegistration
+                    redirectUrl ? redirectUrl : appConfig.unAuthenticatedEntryPath
+                    // appConfig.newSaloonRegistration
                 )
                 return {
                     status: 'success',
