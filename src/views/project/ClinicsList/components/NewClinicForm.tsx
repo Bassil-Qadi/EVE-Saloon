@@ -477,7 +477,7 @@ const NewProjectForm = () => {
                             </Field>
                         </FormItem>
                         <FormItem
-                            label="رقم البطاقة الشخصية"
+                            label="رقم الهوية"
                             invalid={errors.ownersIdentity && touched.ownersIdentity}
                             errorMessage={errors.ownersIdentity}
                         >
@@ -485,7 +485,7 @@ const NewProjectForm = () => {
                                 type="text"
                                 autoComplete="off"
                                 name="ownersIdentity"
-                                placeholder="ادخل رقم البطاقة الشخصية"
+                                placeholder="ادخل رقم الهوية"
                                 component={Input}
                             />
                         </FormItem>

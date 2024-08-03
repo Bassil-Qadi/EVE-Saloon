@@ -6,6 +6,7 @@ import Select from '@/components/ui/Select'
 import Upload from '@/components/ui/Upload'
 import Notification from '@/components/ui/Notification'
 import toast from '@/components/ui/toast'
+import { TimePicker } from 'react-time-picker'
 import {
     Field,
     FieldArray,
@@ -94,9 +95,9 @@ const validationSchema = Yup.object().shape({
 const LocateControl = ({ onLocationFound }: any) => {
     const map = useMapEvents({
         locationfound(e) {
-          onLocationFound(e);
+            onLocationFound(e)
         },
-      });
+    })
 
     useEffect(() => {
         const lc = L.control
@@ -125,8 +126,8 @@ const NewProjectForm = () => {
     const [position, setPosition] = useState(null)
 
     const handleLocationFound = (e: any) => {
-        setPosition(e.latlng);
-      };
+        setPosition(e.latlng)
+    }
 
     const onSubmit = (
         formValue: FormModel,
@@ -149,7 +150,7 @@ const NewProjectForm = () => {
             activityPracticeLicense,
             ibanCertificate,
             valueAddedTaxCertificate,
-            taxNumber
+            taxNumber,
         } = formValue
 
         const newCategories = categories.map((category: any) => category.id)
@@ -238,7 +239,7 @@ const NewProjectForm = () => {
                 onSubmit(values, setSubmitting)
             }}
         >
-            {({ touched, errors, values }) => (
+            {({ touched, errors, values, setFieldValue }) => (
                 <Form>
                     <FormContainer>
                         <FormItem
@@ -468,7 +469,10 @@ const NewProjectForm = () => {
                         </FormItem>
                         <FormItem
                             label="السجل التجاري"
-                            invalid={errors.commercialRegister && touched.commercialRegister}
+                            invalid={
+                                errors.commercialRegister &&
+                                touched.commercialRegister
+                            }
                             errorMessage={errors.commercialRegister}
                         >
                             <Field name="commercialRegister">
@@ -509,21 +513,26 @@ const NewProjectForm = () => {
                             </Field>
                         </FormItem>
                         <FormItem
-                            label="رقم البطاقة الشخصية"
-                            invalid={errors.ownersIdentity && touched.ownersIdentity}
+                            label="رقم الهوية"
+                            invalid={
+                                errors.ownersIdentity && touched.ownersIdentity
+                            }
                             errorMessage={errors.ownersIdentity}
                         >
                             <Field
                                 type="text"
                                 autoComplete="off"
                                 name="ownersIdentity"
-                                placeholder="ادخل رقم البطاقة الشخصية"
+                                placeholder="ادخل رقم الهوية "
                                 component={Input}
                             />
                         </FormItem>
                         <FormItem
                             label="رخصة مزاولة النشاط"
-                            invalid={errors.activityPracticeLicense && touched.activityPracticeLicense}
+                            invalid={
+                                errors.activityPracticeLicense &&
+                                touched.activityPracticeLicense
+                            }
                             errorMessage={errors.activityPracticeLicense}
                         >
                             <Field name="activityPracticeLicense">
@@ -565,7 +574,10 @@ const NewProjectForm = () => {
                         </FormItem>
                         <FormItem
                             label="شهادة ايبان"
-                            invalid={errors.ibanCertificate && touched.ibanCertificate}
+                            invalid={
+                                errors.ibanCertificate &&
+                                touched.ibanCertificate
+                            }
                             errorMessage={errors.ibanCertificate}
                         >
                             <Field name="ibanCertificate">
@@ -607,7 +619,10 @@ const NewProjectForm = () => {
                         </FormItem>
                         <FormItem
                             label="شهادة ضريبة القيمة المضافة"
-                            invalid={errors.valueAddedTaxCertificate && touched.valueAddedTaxCertificate}
+                            invalid={
+                                errors.valueAddedTaxCertificate &&
+                                touched.valueAddedTaxCertificate
+                            }
                             errorMessage={errors.valueAddedTaxCertificate}
                         >
                             <Field name="valueAddedTaxCertificate">
@@ -675,7 +690,9 @@ const NewProjectForm = () => {
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                                 />
-                                <LocateControl onLocationFound={handleLocationFound} />
+                                <LocateControl
+                                    onLocationFound={handleLocationFound}
+                                />
                             </MapContainer>
                         </div>
                         <Button block variant="solid" type="submit">
