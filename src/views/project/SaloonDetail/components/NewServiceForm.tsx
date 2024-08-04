@@ -215,7 +215,7 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
                                 }}
                             </Field>
                         </FormItem>
-                        {/* <FormItem
+                        <FormItem
                             label="قائمة العاملين"
                             invalid={errors.saloonStaff && touched.saloonStaff}
                             errorMessage={errors.saloonStaff}
@@ -238,7 +238,7 @@ const NewServiceForm = ({ saloonCategories, saloonStaff, fetchData }: any) => {
                                     )
                                 }}
                             </Field>
-                        </FormItem> */}
+                        </FormItem>
                         <Button block variant="solid" type="submit">
                             إضافة
                         </Button>
