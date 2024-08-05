@@ -6,11 +6,9 @@ import Select from '@/components/ui/Select'
 import { FormItem } from '@/components/ui/Form'
 import { getCategoryList, useAppDispatch } from '../../CategoryList/store'
 import { useAppSelector } from '../store'
-import {
-    HiUserCircle,
-    HiOutlineUser,
-} from 'react-icons/hi'
+import { HiUserCircle, HiOutlineUser } from 'react-icons/hi'
 import { Field, FieldProps, FormikErrors, FormikTouched } from 'formik'
+import { FcImageFile } from 'react-icons/fc'
 
 type Option = {
     value: boolean | string
@@ -62,13 +60,14 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
     const dispatch = useAppDispatch()
 
     const selectedSaloon = useAppSelector(
-        state => state.projectSaloonDetails.data.profileData.saloon._id
+        (state) => state.projectSaloonDetails.data.profileData.saloon._id,
     )
     const [categories, setCategories] = useState([])
-    // const [isImageChanged, setIsImageChanged] = useState(false)
 
     useEffect(() => {
-        let responseData = dispatch(getCategoryList({ saloonId: selectedSaloon }))
+        let responseData = dispatch(
+            getCategoryList({ saloonId: selectedSaloon }),
+        )
         responseData.then((data) => {
             const updatedCategories = data.payload.map((cat: Category) => {
                 return {
@@ -120,6 +119,43 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
                     }}
                 </Field>
             </FormItem> */}
+            <FormItem
+                invalid={errors.logo && touched.logo}
+                errorMessage={errors.logo}
+            >
+                <Field name="logo">
+                    {({ field, form }: FieldProps) => {
+                        return (
+                            <div>
+                                <Upload
+                                    draggable
+                                    uploadLimit={1}
+                                    onChange={(files) => {
+                                        form.setFieldValue(field.name, files[0])
+                                    }}
+                                >
+                                    <div className="my-10 text-center">
+                                        <div className="text-6xl mb-4 flex justify-center">
+                                            <FcImageFile />
+                                        </div>
+                                        <p className="font-semibold">
+                                            <span className="text-gray-800 dark:text-white">
+                                                Drop your image here, or{' '}
+                                            </span>
+                                            <span className="text-blue-500">
+                                                browse
+                                            </span>
+                                        </p>
+                                        <p className="mt-1 opacity-60 dark:text-white">
+                                            Support: jpeg, png, gif
+                                        </p>
+                                    </div>
+                                </Upload>
+                            </div>
+                        )
+                    }}
+                </Field>
+            </FormItem>
             <FormItem
                 label="الاسم"
                 invalid={errors.name && touched.name}
@@ -178,9 +214,17 @@ const PersonalInfoForm = (props: PersonalInfoFormProps) => {
                         return (
                             <Select
                                 placeholder="اختر المنطقة"
-                                defaultValue={[saudiArabiaStates.filter(add => add.value === field.value)[0]]}
+                                defaultValue={[
+                                    saudiArabiaStates.filter(
+                                        (add) => add.value === field.value,
+                                    )[0],
+                                ]}
                                 options={saudiArabiaStates}
-                                onChange={(options) => form.setFieldValue(field.name, options.value)
+                                onChange={(options) =>
+                                    form.setFieldValue(
+                                        field.name,
+                                        options.value,
+                                    )
                                 }
                             />
                         )

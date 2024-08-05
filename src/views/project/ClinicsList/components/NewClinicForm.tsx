@@ -119,6 +119,24 @@ const NewProjectForm = () => {
         setPosition(e.latlng);
       };
 
+      useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                setPosition({
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                });
+              },
+              (error) => {
+                console.log("error")
+              }
+            );
+          } else {
+            console.log("error")
+          }
+    }, [])
+
     const onSubmit = (
         formValue: FormModel,
         setSubmitting: (isSubmitting: boolean) => void,
@@ -631,7 +649,7 @@ const NewProjectForm = () => {
                         <div>
                             <p className='mb-2 font-semibold'>موقع الصالون</p>
                         <MapContainer
-                            center={[24.774265, 46.738586]}
+                            center={[position?.lat, position?.lng]}
                             zoom={13}
                             style={{ height: '40vh', width: '100%', marginBottom: '20px' }}
                         >

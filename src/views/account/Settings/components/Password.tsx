@@ -9,6 +9,7 @@ import FormDesription from './FormDesription'
 import FormRow from './FormRow'
 import { Field, Form, Formik } from 'formik'
 import isLastChild from '@/utils/isLastChild'
+import { apiResetPassword } from '@/services/AuthService'
 import {
     HiOutlineDesktopComputer,
     HiOutlineDeviceMobile,
@@ -16,6 +17,7 @@ import {
 } from 'react-icons/hi'
 import dayjs from 'dayjs'
 import * as Yup from 'yup'
+import { useAppSelector } from '@/store'
 
 type LoginHistory = {
     type: string
@@ -46,9 +48,7 @@ const LoginHistoryIcon = ({ type }: { type: string }) => {
 const validationSchema = Yup.object().shape({
     password: Yup.string().required('Password Required'),
     newPassword: Yup.string()
-        .required('Enter your new password')
-        .min(8, 'Too Short!')
-        .matches(/^[A-Za-z0-9_-]*$/, 'Only Letters & Numbers Allowed'),
+        .required('Enter your new password'),
     confirmNewPassword: Yup.string().oneOf(
         [Yup.ref('newPassword'), ''],
         'Password not match'
@@ -56,15 +56,28 @@ const validationSchema = Yup.object().shape({
 })
 
 const Password = ({ data }: { data?: LoginHistory[] }) => {
-    const onFormSubmit = (
+
+    const userId = useAppSelector(
+        state => state.auth.user.id
+    )
+
+    const onFormSubmit = async (
         values: PasswordFormModel,
         setSubmitting: (isSubmitting: boolean) => void
     ) => {
-        toast.push(<Notification title={'Password updated'} type="success" />, {
-            placement: 'top-center',
-        })
-        setSubmitting(false)
-        console.log('values', values)
+        let { password, confirmNewPassword } = values
+        try {
+            let resp = await apiResetPassword({ password: password, confirmPassword: confirmNewPassword, userId })
+            if(resp.data) {
+                setSubmitting(false)
+                toast.push(<Notification title={'Password updated'} type="success" />, {
+                    placement: 'top-center',
+                })
+            }
+        } catch(errors) {
+            setSubmitting(false)
+        }
+        // console.log('values', values)
     }
 
     return (

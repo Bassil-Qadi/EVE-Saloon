@@ -57,11 +57,13 @@ export type SignUpCredential = {
 }
 
 export type ForgotPassword = {
-    email: string
+    phone: string
 }
 
 export type ResetPassword = {
     password: string
+    confirmPassword: string
+    userId: string | undefined
 }
 
 export type OtpCredential = {

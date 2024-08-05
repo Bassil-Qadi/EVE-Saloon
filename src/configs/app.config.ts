@@ -3,6 +3,7 @@ export type AppConfig = {
     authenticatedEntryPath: string
     unAuthenticatedEntryPath: string
     verifyEntryPath: string
+    verifyPasswordPath: string
     newSaloonRegistration: string
     tourPath: string
     locale: string
@@ -15,6 +16,7 @@ const appConfig: AppConfig = {
     authenticatedEntryPath: '/app/sales/dashboard',
     unAuthenticatedEntryPath: '/sign-in',
     verifyEntryPath: '/verify-otp',
+    verifyPasswordPath: '/verify-password-otp',
     newSaloonRegistration: '/add-saloon',
     tourPath: '/app/account/kyc-form',
     locale: 'ar',

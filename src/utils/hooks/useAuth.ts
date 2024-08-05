@@ -109,10 +109,7 @@ function useAuth() {
         try {
             const resp = await apiVerifyOtp(values)
             if (resp.data) {
-                // const { tokens } = resp.data
-                // dispatch(signInSuccess(tokens.access.token))
                 if (resp.data.user) {
-                    console.log("I'm here")
                     dispatch(
                         setUser(
                             resp.data.user || {
@@ -127,7 +124,40 @@ function useAuth() {
                 const redirectUrl = query.get(REDIRECT_URL_KEY)
                 navigate(
                     redirectUrl ? redirectUrl : appConfig.unAuthenticatedEntryPath
-                    // appConfig.newSaloonRegistration
+                )
+                return {
+                    status: 'success',
+                    message: '',
+                }
+            }
+            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        } catch (errors: any) {
+            return {
+                status: 'failed',
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
+    }
+
+    const verifyForgotPasswordOtp = async (values: OtpCredential) => {
+        try {
+            const resp = await apiVerifyOtp(values)
+            if (resp.data) {
+                if (resp.data.user) {
+                    dispatch(
+                        setUser(
+                            resp.data.user || {
+                                avatar: '',
+                                userName: 'Anonymous',
+                                authority: ['USER'],
+                                email: '',
+                            }
+                        )
+                    )
+                }
+                const redirectUrl = query.get(REDIRECT_URL_KEY)
+                navigate(
+                    redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath
                 )
                 return {
                     status: 'success',
@@ -170,6 +200,7 @@ function useAuth() {
         signIn,
         signUp,
         verifyOtp,
+        verifyForgotPasswordOtp,
         signOut,
     }
 }

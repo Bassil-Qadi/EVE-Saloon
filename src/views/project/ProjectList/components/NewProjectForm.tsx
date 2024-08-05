@@ -6,7 +6,6 @@ import Select from '@/components/ui/Select'
 import Upload from '@/components/ui/Upload'
 import Notification from '@/components/ui/Notification'
 import toast from '@/components/ui/toast'
-import { TimePicker } from 'react-time-picker'
 import {
     Field,
     FieldArray,
@@ -128,6 +127,36 @@ const NewProjectForm = () => {
     const handleLocationFound = (e: any) => {
         setPosition(e.latlng)
     }
+
+    const LocationMarker = () => {
+        useMapEvents({
+            click(e) {
+                const { lat, lng } = e.latlng
+                setPosition(e.latlng)
+                // setLocation({ lat, lng });
+            },
+        })
+
+        return position === null ? null : <Marker position={position}></Marker>
+    }
+
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                setPosition({
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                });
+              },
+              (error) => {
+                console.log("error")
+              }
+            );
+          } else {
+            console.log("error")
+          }
+    }, [])
 
     const onSubmit = (
         formValue: FormModel,
@@ -675,10 +704,10 @@ const NewProjectForm = () => {
                                 component={Input}
                             />
                         </FormItem>
-                        <div>
+                        {position && <div>
                             <p className="mb-2 font-semibold">موقع الصالون</p>
                             <MapContainer
-                                center={[24.774265, 46.738586]}
+                                center={[position?.lat, position?.lng]}
                                 zoom={13}
                                 style={{
                                     height: '40vh',
@@ -693,8 +722,9 @@ const NewProjectForm = () => {
                                 <LocateControl
                                     onLocationFound={handleLocationFound}
                                 />
+                                <LocationMarker />
                             </MapContainer>
-                        </div>
+                        </div>}
                         <Button block variant="solid" type="submit">
                             إرسال
                         </Button>

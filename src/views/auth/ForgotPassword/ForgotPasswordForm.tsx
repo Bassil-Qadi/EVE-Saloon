@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { FormItem, FormContainer } from '@/components/ui/Form'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
@@ -10,6 +11,8 @@ import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import type { CommonProps } from '@/@types/common'
 import type { AxiosError } from 'axios'
+import Cookies from 'universal-cookie'
+import appConfig from '@/configs/app.config'
 
 interface ForgotPasswordFormProps extends CommonProps {
     disableSubmit?: boolean
@@ -17,15 +20,17 @@ interface ForgotPasswordFormProps extends CommonProps {
 }
 
 type ForgotPasswordFormSchema = {
-    email: string
+    phone: string
 }
 
 const validationSchema = Yup.object().shape({
-    email: Yup.string().required('Please enter your email'),
+    phone: Yup.string().required('الرجاء إدخال رقم الجوال'),
 })
 
 const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
     const { disableSubmit = false, className, signInUrl = '/sign-in' } = props
+    const navigate = useNavigate()
+    const cookies = new Cookies(null, { path: '/' });
 
     const [emailSent, setEmailSent] = useState(false)
 
@@ -34,13 +39,18 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
     const onSendMail = async (
         values: ForgotPasswordFormSchema,
         setSubmitting: (isSubmitting: boolean) => void
+        
     ) => {
         setSubmitting(true)
+        cookies.set('phone', values.phone)
         try {
             const resp = await apiForgotPassword(values)
             if (resp.data) {
                 setSubmitting(false)
                 setEmailSent(true)
+                navigate(
+                    appConfig.verifyPasswordPath
+                )
             }
         } catch (errors) {
             setMessage(
@@ -56,18 +66,16 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
             <div className="mb-6">
                 {emailSent ? (
                     <>
-                        <h3 className="mb-1">Check your email</h3>
+                        <h3 className="mb-1">يرجى التحقق من جوالك</h3>
                         <p>
-                            We have sent a password recovery instruction to your
-                            email
+                            لقد قمنا بإرسال رمز التأكيد
                         </p>
                     </>
                 ) : (
                     <>
-                        <h3 className="mb-1">Forgot Password</h3>
+                        <h3 className="mb-1">هل نسيت كلمة السر؟</h3>
                         <p>
-                            Please enter your email address to receive a
-                            verification code
+                        الرجاء إدخال رقم جوالك  لتلقي رمز التحقق
                         </p>
                     </>
                 )}
@@ -79,7 +87,7 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
             )}
             <Formik
                 initialValues={{
-                    email: 'admin@mail.com',
+                    phone: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
@@ -95,14 +103,14 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
                         <FormContainer>
                             <div className={emailSent ? 'hidden' : ''}>
                                 <FormItem
-                                    invalid={errors.email && touched.email}
-                                    errorMessage={errors.email}
+                                    invalid={errors.phone && touched.phone}
+                                    errorMessage={errors.phone}
                                 >
                                     <Field
-                                        type="email"
+                                        type="text"
                                         autoComplete="off"
-                                        name="email"
-                                        placeholder="Email"
+                                        name="phone"
+                                        placeholder="رقم الجوال"
                                         component={Input}
                                     />
                                 </FormItem>
@@ -113,11 +121,11 @@ const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
                                 variant="solid"
                                 type="submit"
                             >
-                                {emailSent ? 'Resend Email' : 'Send Email'}
+                                {emailSent ? 'أعد إرسال رمز التحقق' : 'إرسال'}
                             </Button>
                             <div className="mt-4 text-center">
-                                <span>Back to </span>
-                                <ActionLink to={signInUrl}>Sign in</ActionLink>
+                                <span>العودة إلى </span>
+                                <ActionLink to={signInUrl}>تسجيل الدخول</ActionLink>
                             </div>
                         </FormContainer>
                     </Form>

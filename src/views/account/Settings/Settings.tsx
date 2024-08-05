@@ -55,7 +55,7 @@ const settingsMenu: Record<
     }
 > = {
     profile: { label: 'الملف الشخصي', path: 'profile' },
-    // password: { label: 'كلمة السر', path: 'password' },
+    password: { label: 'كلمة السر', path: 'password' },
     // notification: { label: 'الإشعارات', path: 'notification' },
 }
 
