@@ -56,8 +56,15 @@ const ActionBar = () => {
                     prefix={<HiOutlineSearch className="text-lg" />}
                     onChange={handleInputChange}
                 />
-                
-                {saloonsList?.length > 0 && currentUserRole === 'owner' && <Tooltip title={'لا يمكنك إضافة أكثر من صالون'}>
+                <Button
+                    size="sm"
+                    variant="twoTone"
+                    icon={<HiOutlinePlusCircle />}
+                    onClick={onAddNewProject}
+                >
+                    إضافة صالون جديد
+                </Button>
+                {/* {saloonsList?.length > 0 && currentUserRole === 'owner' && <Tooltip title={'لا يمكنك إضافة أكثر من صالون'}>
                     <Button
                     size="sm"
                     variant="twoTone"
@@ -76,7 +83,7 @@ const ActionBar = () => {
                     onClick={onAddNewProject}
                 >
                     إضافة صالون جديد
-                </Button>}
+                </Button>} */}
             </div>
         </div>
     )
