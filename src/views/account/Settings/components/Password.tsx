@@ -46,12 +46,12 @@ const LoginHistoryIcon = ({ type }: { type: string }) => {
 }
 
 const validationSchema = Yup.object().shape({
-    password: Yup.string().required('Password Required'),
+    password: Yup.string().required('كلمة المرور مطلوبة'),
     newPassword: Yup.string()
-        .required('Enter your new password'),
+        .required('ادخل كلمة المرور الجديدة'),
     confirmNewPassword: Yup.string().oneOf(
         [Yup.ref('newPassword'), ''],
-        'Password not match'
+        'الكلمات غير متطابقة'
     ),
 })
 
